@@ -242,8 +242,7 @@
 </div>
 
 <script>
-  const GEMINI_BASE  = 'https://generativelanguage.googleapis.com/v1/models';
-  const GEMINI_MODEL = 'gemini-2.5-flash-lite';
+  const GEMINI_PROXY = '/api/gemini';
 
   // ── State ──
   const results  = []; // { filename, objectUrl, status, data, error }
@@ -268,15 +267,6 @@
   const btnNext      = document.getElementById('btnNext');
   const btnExcel     = document.getElementById('btnExcel');
 
-  // ── API key ──
-  function getKey() {
-    let key = localStorage.getItem('gemini_api_key') || '';
-    if (!key) {
-      key = prompt('Gemini API 키를 입력하세요:') || '';
-      if (key) localStorage.setItem('gemini_api_key', key);
-    }
-    return key.trim();
-  }
 
   // ── Upload ──
   uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
@@ -294,7 +284,6 @@
   btnExcel.addEventListener('click', exportToExcel);
 
   function handleFiles(files) {
-    if (!getKey()) return;
     const valid = files.filter(f => f.type.startsWith('image/') && f.size <= 10 * 1024 * 1024);
     if (!valid.length) return;
 
@@ -323,7 +312,7 @@
       try {
         const r = results[idx];
         const b64 = await fileToBase64(r.file);
-        r.data = await callGemini(b64, r.file.type || 'image/jpeg', getKey());
+        r.data = await callGemini(b64, r.file.type || 'image/jpeg');
         r.status = 'done';
       } catch (e) {
         results[idx].error = e.message;
@@ -345,9 +334,7 @@
     });
   }
 
-  async function callGemini(b64, mimeType, apiKey) {
-    const url = `${GEMINI_BASE}/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
-    const prompt = `다음 영수증 이미지를 분석하여 아래 JSON 형식으로 정보를 추출해주세요.
+  const PROMPT = `다음 영수증 이미지를 분석하여 아래 JSON 형식으로 정보를 추출해주세요.
 반드시 JSON만 반환하고, 다른 텍스트는 포함하지 마세요.
 
 {
@@ -368,15 +355,13 @@
 - 한글 품목명을 그대로 사용
 - 인식 불확실 항목도 최대한 추출`;
 
-    const body = {
-      contents: [{ parts: [
-        { inlineData: { mimeType, data: b64 } },
-        { text: prompt }
-      ]}],
-      generationConfig: { temperature: 0.1, maxOutputTokens: 2048 }
-    };
-    const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e?.error?.message || `API 오류 (${res.status})`); }
+  async function callGemini(b64, mimeType) {
+    const res = await fetch(GEMINI_PROXY, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ base64Data: b64, mimeType, prompt: PROMPT })
+    });
+    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e?.error?.message || `서버 오류 (${res.status})`); }
     const data = await res.json();
     const cand = data?.candidates?.[0];
     if (!cand) throw new Error('응답 없음');
