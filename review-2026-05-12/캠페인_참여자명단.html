@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>캠페인 참여자 명단 | 안전운전 캠페인 2026</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+    :root {
+      --green:   #0057b8;
+      --green-d: #003d82;
+      --green-l: #e8f1fc;
+      --navy:    #0b1f3a;
+      --navy-m:  #0e2d6b;
+      --orange:  #f47920;
+      --orange-d:#c75500;
+      --white:   #ffffff;
+      --gray:    #f4f6f8;
+      --text:    #1a2535;
+      --muted:   #6b7a8d;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── 상단 로고바 ── */
+    .topbar {
+      background: var(--navy);
+      padding: 12px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .topbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-mark {
+      width: 36px; height: 36px;
+      background: var(--orange);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 900; color: #fff; letter-spacing: -1px;
+    }
+    .logo-text {
+      font-size: 13px; font-weight: 500;
+      color: rgba(255,255,255,0.85); line-height: 1.4;
+    }
+    .logo-text span {
+      display: block; font-size: 10px;
+      color: rgba(255,255,255,0.45); font-weight: 300; letter-spacing: 1px;
+    }
+    .topbar-right {
+      display: flex; flex-direction: column;
+      align-items: flex-end; gap: 2px;
+    }
+    .topbar-date {
+      font-size: 12px; color: rgba(255,255,255,0.7);
+      font-weight: 500; letter-spacing: 0.5px;
+    }
+    .topbar-year {
+      font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 1px;
+    }
+
+    /* ── 페이지 헤더 ── */
+    .page-header {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-m) 70%, #003060 100%);
+      padding: 56px 40px 50px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px,
+        transparent 1px, transparent 80px
+      );
+    }
+    .road-line {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 5px;
+      background: repeating-linear-gradient(
+        90deg, var(--orange) 0px, var(--orange) 60px,
+        transparent 60px, transparent 90px
+      );
+      opacity: 0.65;
+    }
+    .page-header-tag {
+      display: inline-block;
+      background: rgba(244,121,32,0.18);
+      border: 1px solid rgba(244,121,32,0.4);
+      color: #ffb366; font-size: 11px; font-weight: 600;
+      letter-spacing: 2.5px; padding: 5px 16px;
+      border-radius: 999px; margin-bottom: 20px; text-transform: uppercase;
+    }
+    .page-header-title {
+      font-size: clamp(24px, 4vw, 38px);
+      font-weight: 900; color: #fff; letter-spacing: -1px;
+    }
+    .page-header-sub {
+      font-size: 13.5px; color: rgba(255,255,255,0.45);
+      font-weight: 300; margin-top: 12px; letter-spacing: 0.3px;
+    }
+
+    /* ── 통계 배너 ── */
+    .stats-bar {
+      background: var(--green-l);
+      border-bottom: 1px solid #cfe0f7;
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .stats-count {
+      display: flex; align-items: baseline; gap: 8px;
+    }
+    .stats-num {
+      font-size: 32px; font-weight: 900; color: var(--green);
+      letter-spacing: -1.5px; line-height: 1;
+    }
+    .stats-unit { font-size: 14px; font-weight: 600; color: var(--green); }
+    .stats-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .stats-actions {
+      display: flex; gap: 10px; align-items: center;
+    }
+    .btn-back {
+      font-size: 13px; font-weight: 600; color: var(--green);
+      background: #fff; border: 1.5px solid var(--green);
+      padding: 9px 20px; border-radius: 999px;
+      text-decoration: none; cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-back:hover { background: var(--green); color: #fff; }
+    .btn-clear {
+      font-size: 13px; font-weight: 600; color: #ef4444;
+      background: #fff3f3; border: 1.5px solid #fca5a5;
+      padding: 9px 20px; border-radius: 999px;
+      cursor: pointer; font-family: inherit;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-clear:hover { background: #ef4444; color: #fff; border-color: #ef4444; }
+
+    /* ── 검색 ── */
+    .search-bar {
+      padding: 24px 40px 0;
+      display: flex; justify-content: flex-end;
+    }
+    .search-input {
+      width: 240px; border: 1.5px solid #dde2e8;
+      border-radius: 10px; padding: 9px 14px;
+      font-size: 13.5px; font-family: inherit;
+      color: var(--text); outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: var(--green); }
+    .search-input::placeholder { color: #b0bac6; }
+
+    /* ── 참여자 그리드 ── */
+    .list-section {
+      padding: 24px 40px 60px;
+      flex: 1;
+    }
+    .participant-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      max-width: 1100px;
+    }
+    .p-card {
+      background: #fff;
+      border: 1px solid #e8ecf0;
+      border-radius: 12px;
+      padding: 18px 16px 16px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center;
+      position: relative;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .p-card:hover { transform: translateY(-2px); box-shadow: 0 5px 18px rgba(0,0,0,0.09); }
+    .p-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--green) 0%, #0070c0 100%);
+      border-radius: 12px 12px 0 0;
+    }
+    .p-num {
+      font-size: 10px; font-weight: 700;
+      color: rgba(0,87,184,0.4); letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+    .p-avatar {
+      width: 44px; height: 44px;
+      background: var(--green-l);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 900;
+      color: var(--green);
+      margin-bottom: 10px;
+      flex-shrink: 0;
+    }
+    .p-name {
+      font-size: 14px; font-weight: 700;
+      color: var(--navy); word-break: break-all; line-height: 1.35;
+    }
+    .p-badge {
+      margin-top: 8px;
+      font-size: 10px; font-weight: 600;
+      color: #0057b8; background: var(--green-l);
+      padding: 2px 10px; border-radius: 999px;
+    }
+
+    /* ── 빈 상태 ── */
+    .empty-state {
+      text-align: center; padding: 80px 40px;
+      flex: 1;
+    }
+    .empty-icon { font-size: 56px; margin-bottom: 20px; opacity: 0.45; }
+    .empty-title { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .empty-desc { font-size: 13.5px; color: var(--muted); line-height: 1.75; margin-bottom: 28px; }
+    .empty-btn {
+      display: inline-block;
+      background: var(--orange); color: #fff;
+      font-size: 13.5px; font-weight: 600;
+      padding: 12px 28px; border-radius: 999px;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(244,121,32,0.3);
+      transition: background 0.2s;
+    }
+    .empty-btn:hover { background: var(--orange-d); }
+
+    /* ── 검색 결과 없음 ── */
+    .no-result {
+      grid-column: 1 / -1;
+      text-align: center; padding: 60px 20px;
+      color: var(--muted); font-size: 13.5px;
+    }
+
+    /* ── 푸터 ── */
+    footer {
+      background: #0b1f3a; padding: 24px 40px;
+      text-align: center; font-size: 11.5px;
+      color: rgba(255,255,255,0.3); line-height: 1.9;
+    }
+    footer strong { color: rgba(255,255,255,0.55); font-weight: 500; }
+
+    /* ── 반응형 ── */
+    @media (max-width: 700px) {
+      .topbar { padding: 10px 20px; }
+      .page-header { padding: 44px 20px 40px; }
+      .stats-bar { padding: 16px 20px; }
+      .search-bar { padding: 20px 20px 0; }
+      .search-input { width: 100%; }
+      .list-section { padding: 20px 20px 48px; }
+      footer { padding: 20px; }
+      .stats-actions { width: 100%; justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- 로고바 -->
+<nav class="topbar">
+  <div class="topbar-logo">
+    <div class="logo-mark">도</div>
+    <div class="logo-text">
+      한국도로공사
+      <span>Korea Expressway Corporation</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-date" id="today-date"></div>
+    <div class="topbar-year">SAFETY CAMPAIGN 2026</div>
+  </div>
+</nav>
+
+<!-- 페이지 헤더 -->
+<div class="page-header">
+  <div class="page-header-tag">Participants</div>
+  <div class="page-header-title">캠페인 참여자 명단</div>
+  <p class="page-header-sub">2026 사내 안전운전 캠페인 · 참여 인증 완료자</p>
+  <div class="road-line"></div>
+</div>
+
+<!-- 통계 + 버튼 -->
+<div class="stats-bar" id="stats-bar">
+  <div>
+    <div class="stats-count">
+      <span class="stats-num" id="total-count">0</span>
+      <span class="stats-unit">명</span>
+    </div>
+    <div class="stats-label">총 참여 인증 완료</div>
+  </div>
+  <div class="stats-actions">
+    <a href="안전운전_캠페인.html" class="btn-back">← 캠페인 페이지</a>
+    <button class="btn-clear" onclick="confirmClear()">명단 초기화</button>
+  </div>
+</div>
+
+<!-- 검색 -->
+<div class="search-bar" id="search-wrap" style="display:none;">
+  <input type="text" class="search-input" id="search-input"
+    placeholder="이름 또는 사번 검색…" oninput="renderList()" />
+</div>
+
+<!-- 참여자 목록 / 빈 상태 -->
+<div id="list-wrap"></div>
+
+<!-- 푸터 -->
+<footer>
+  <div><strong>한국도로공사 AI모델개발부</strong></div>
+  <div>문의 : 내선 2345 &nbsp;|&nbsp; safedrive@ex.co.kr</div>
+  <div>© 2026 Korea Expressway Corporation. All rights reserved.</div>
+</footer>
+
+<script>
+  const KEY = 'safeCampaign2026_participants';
+
+  // 날짜 표시
+  const d = new Date();
+  document.getElementById('today-date').textContent =
+    d.getFullYear() + '. ' +
+    String(d.getMonth() + 1).padStart(2, '0') + '. ' +
+    String(d.getDate()).padStart(2, '0') + '.';
+
+  function getList() {
+    return JSON.parse(localStorage.getItem(KEY) || '[]');
+  }
+
+  function getInitial(name) {
+    if (!name) return '?';
+    // 숫자(사번)인 경우
+    if (/^\d/.test(name)) return '#';
+    return name.charAt(0);
+  }
+
+  function renderList() {
+    const list = getList();
+    const query = (document.getElementById('search-input')?.value || '').trim().toLowerCase();
+    const wrap = document.getElementById('list-wrap');
+    const totalEl = document.getElementById('total-count');
+    const searchWrap = document.getElementById('search-wrap');
+
+    totalEl.textContent = list.length.toLocaleString();
+
+    if (list.length === 0) {
+      searchWrap.style.display = 'none';
+      wrap.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">🏅</div>
+          <div class="empty-title">아직 참여자가 없습니다</div>
+          <div class="empty-desc">
+            캠페인 페이지에서 '캠페인 참여 인증하기' 버튼을 클릭해<br>
+            안전운전 서약을 완료하면 명단에 추가됩니다.
+          </div>
+          <a href="안전운전_캠페인.html" class="empty-btn">지금 참여하기 →</a>
+        </div>`;
+      return;
+    }
+
+    searchWrap.style.display = 'flex';
+
+    const filtered = query
+      ? list.filter(p => p.name.toLowerCase().includes(query))
+      : list;
+
+    const gridItems = filtered.length === 0
+      ? `<div class="no-result">검색 결과가 없습니다.</div>`
+      : filtered.map((p, i) => {
+          const seq = list.indexOf(p) + 1;
+          return `
+            <div class="p-card">
+              <div class="p-num">No. ${seq}</div>
+              <div class="p-avatar">${getInitial(p.name)}</div>
+              <div class="p-name">${escHtml(p.name)}</div>
+              <div class="p-badge">✔ 인증 완료</div>
+            </div>`;
+        }).join('');
+
+    wrap.innerHTML = `
+      <div class="list-section">
+        <div class="participant-grid">${gridItems}</div>
+      </div>`;
+  }
+
+  function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function confirmClear() {
+    if (!confirm('참여자 명단을 전체 삭제하겠습니까?\n이 작업은 되돌릴 수 없습니다.')) return;
+    localStorage.removeItem(KEY);
+    renderList();
+  }
+
+  renderList();
+</script>
+
+</body>
+</html>

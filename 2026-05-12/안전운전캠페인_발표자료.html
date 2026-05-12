@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>안전운전 캠페인 2026 | 발표자료</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+      background: #111827;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 0 80px;
+      gap: 12px;
+    }
+
+    /* ── 슬라이드 레이블 (화면 전용) ── */
+    .deck-label {
+      width: 1280px;
+      font-size: 10.5px;
+      color: rgba(255,255,255,0.22);
+      letter-spacing: 1.5px;
+      padding: 0 6px;
+      margin-top: 12px;
+    }
+
+    /* ── 공통 슬라이드 ── */
+    .slide {
+      width: 1280px;
+      height: 720px;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    /* 슬라이드 번호 (공통) */
+    .pg {
+      position: absolute;
+      bottom: 18px; right: 32px;
+      font-size: 10.5px;
+      letter-spacing: 1px;
+      z-index: 10;
+    }
+
+    /* 도로 점선 장식 */
+    .road-stripe {
+      position: absolute;
+      left: 0; right: 0;
+      height: 5px;
+      background: repeating-linear-gradient(
+        90deg, #f47920 0px, #f47920 56px, transparent 56px, transparent 84px
+      );
+      opacity: 0.65;
+    }
+    .road-stripe.bottom { bottom: 0; }
+    .road-stripe.top    { top: 0; }
+
+    /* PDF 저장 버튼 */
+    .btn-pdf {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      z-index: 9999;
+      background: #f47920;
+      color: #fff;
+      border: none;
+      padding: 13px 28px;
+      border-radius: 999px;
+      font-size: 14px; font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(244,121,32,0.5);
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-pdf:hover { background: #c75500; transform: translateY(-2px); }
+
+
+    /* ════════════════════════════════
+       SLIDE 1  표지
+    ════════════════════════════════ */
+    .s1 {
+      background: linear-gradient(135deg, #0b1f3a 0%, #0e2d6b 55%, #7a2800 100%);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .s1-topbar {
+      padding: 16px 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .s1-logo { display: flex; align-items: center; gap: 10px; }
+    .s1-logo-mark {
+      width: 34px; height: 34px;
+      background: #f47920; border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 900; color: #fff;
+    }
+    .s1-logo-text { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.78); line-height: 1.4; }
+    .s1-logo-text span { display: block; font-size: 9.5px; color: rgba(255,255,255,0.3); font-weight: 300; letter-spacing: 1px; }
+    .s1-tag { font-size: 11px; letter-spacing: 2.5px; color: rgba(255,255,255,0.3); }
+
+    .s1-body {
+      flex: 1; display: flex; align-items: center;
+      padding: 0 120px 0 80px; position: relative;
+    }
+
+    /* deco circles */
+    .s1-deco {
+      position: absolute; border-radius: 50%; pointer-events: none;
+    }
+    .s1-deco-a { width: 440px; height: 440px; top: -90px; right: -90px; border: 1px solid rgba(255,255,255,0.04); }
+    .s1-deco-b { width: 280px; height: 280px; top: -30px; right: -20px; border: 1px solid rgba(59,130,246,0.1); background: rgba(29,78,216,0.06); }
+    /* vertical deco lines */
+    .s1-deco-lines {
+      position: absolute; right: 100px; top: 50%;
+      transform: translateY(-50%);
+      display: flex; gap: 10px;
+    }
+    .s1-deco-line { width: 2px; border-radius: 1px; background: rgba(255,255,255,0.05); }
+
+    .s1-content { position: relative; z-index: 1; max-width: 700px; }
+
+    .s1-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(244,121,32,0.18); border: 1px solid rgba(244,121,32,0.4);
+      color: #ffb366; font-size: 11.5px; font-weight: 600;
+      letter-spacing: 2px; padding: 6px 18px;
+      border-radius: 999px; margin-bottom: 26px;
+      text-transform: uppercase;
+    }
+    .s1-pill::before { content: ''; width: 6px; height: 6px; background: #f47920; border-radius: 50%; }
+
+    .s1-slogan {
+      font-size: 68px; font-weight: 900;
+      color: #fff; line-height: 1.15;
+      letter-spacing: -3.5px; margin-bottom: 18px;
+    }
+    .s1-slogan .acc {
+      color: #f47920; position: relative;
+    }
+    .s1-slogan .acc::after {
+      content: ''; position: absolute;
+      left: 0; bottom: -4px; right: 0;
+      height: 4px; background: #f47920;
+      border-radius: 2px; opacity: 0.4;
+    }
+
+    .s1-sub {
+      font-size: 18px; font-weight: 300;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.5px; margin-bottom: 48px;
+    }
+
+    .s1-meta { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .s1-period { font-size: 16px; font-weight: 600; color: rgba(255,255,255,0.78); }
+    .s1-period .sep { color: #f47920; margin: 0 10px; }
+    .s1-badge {
+      background: rgba(0,87,184,0.28); border: 1px solid rgba(0,87,184,0.45);
+      color: #93c5fd; font-size: 11.5px; font-weight: 600;
+      padding: 5px 16px; border-radius: 999px;
+    }
+
+
+    /* ════════════════════════════════
+       SLIDE 2  캠페인 소개
+    ════════════════════════════════ */
+    .s2 { background: #fff; display: flex; flex-direction: column; }
+
+    .s2-header {
+      background: #0b1f3a;
+      padding: 22px 64px;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .s2-htitle { font-size: 34px; font-weight: 900; color: #fff; letter-spacing: -1px; }
+    .s2-htitle em { color: #f47920; font-style: normal; }
+    .s2-hsub { font-size: 11px; color: rgba(255,255,255,0.35); letter-spacing: 2px; text-transform: uppercase; }
+
+    .s2-body {
+      flex: 1; display: flex;
+      padding: 40px 64px; gap: 48px;
+    }
+
+    .s2-left {
+      display: flex; flex-direction: column; justify-content: center;
+      max-width: 460px;
+    }
+    .s2-intro {
+      font-size: 16.5px; line-height: 2; color: #374151;
+    }
+    .s2-intro strong { color: #0057b8; font-weight: 700; }
+    .s2-divider { width: 40px; height: 3px; background: #f47920; border-radius: 2px; margin: 28px 0; }
+    .s2-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .s2-chip {
+      background: #eff6ff; border: 1px solid #bfdbfe;
+      color: #1e40af; font-size: 12px; font-weight: 600;
+      padding: 5px 14px; border-radius: 999px;
+    }
+
+    .s2-right {
+      flex: 1; display: flex; flex-direction: column; gap: 12px; justify-content: center;
+    }
+    .s2-box {
+      border-radius: 10px; padding: 18px 22px;
+      border-left: 5px solid #0057b8;
+      border: 1px solid #e5e7eb;
+      border-left-width: 5px;
+      background: #f8fafc;
+    }
+    .s2-box:nth-child(2) { border-left-color: #f47920; }
+    .s2-box:nth-child(3) { border-left-color: #0057b8; }
+    .s2-box:nth-child(4) { border-left-color: #10b981; }
+    .s2-box-label { font-size: 10.5px; font-weight: 700; color: #9ca3af; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
+    .s2-box-value { font-size: 17px; font-weight: 700; color: #111827; }
+    .s2-box-value small { font-size: 13px; font-weight: 400; color: #6b7280; margin-left: 6px; }
+
+
+    /* ════════════════════════════════
+       SLIDES 3~5  규칙 슬라이드
+    ════════════════════════════════ */
+    .rule-slide { display: flex; }
+
+    .rl {
+      width: 400px; flex-shrink: 0;
+      background: #0b1f3a;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 60px 50px;
+      position: relative; overflow: hidden;
+    }
+    .rl-bg-num {
+      position: absolute; bottom: -30px; left: -10px;
+      font-size: 220px; font-weight: 900;
+      color: rgba(255,255,255,0.035); line-height: 1;
+      letter-spacing: -12px; user-select: none; pointer-events: none;
+    }
+    .rl-num {
+      font-size: 12px; font-weight: 700;
+      color: #f47920; letter-spacing: 3px; text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .rl-icon { font-size: 58px; margin-bottom: 18px; }
+    .rl-title {
+      font-size: 34px; font-weight: 900;
+      color: #fff; letter-spacing: -1px; line-height: 1.25;
+      margin-bottom: 14px;
+    }
+    .rl-badge {
+      display: inline-block;
+      background: rgba(0,87,184,0.25); border: 1px solid rgba(0,87,184,0.4);
+      color: #93c5fd; font-size: 12px; font-weight: 600;
+      padding: 5px 16px; border-radius: 999px; margin-bottom: 28px;
+    }
+    .rl-bar { width: 40px; height: 3px; background: #f47920; border-radius: 2px; }
+
+    .rr {
+      flex: 1; background: #f8fafc;
+      padding: 60px 60px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .rr-headline {
+      font-size: 30px; font-weight: 900;
+      color: #0b1f3a; letter-spacing: -0.5px;
+      line-height: 1.35; margin-bottom: 22px;
+    }
+    .rr-headline .hl { color: #0057b8; }
+
+    .rr-body {
+      font-size: 17px; line-height: 1.9;
+      color: #374151; margin-bottom: 36px;
+    }
+
+    .rr-stats { display: flex; gap: 14px; }
+    .rr-stat {
+      flex: 1; background: #fff;
+      border: 1px solid #e5e7eb; border-radius: 12px;
+      padding: 20px 22px;
+    }
+    .rr-stat .sv {
+      font-size: 30px; font-weight: 900;
+      color: #0057b8; line-height: 1; margin-bottom: 8px;
+    }
+    .s3 .rr-stat .sv { color: #0057b8; }
+    .s4 .rr-stat .sv { color: #f47920; }
+    .s5 .rr-stat .sv { color: #0057b8; }
+    .rr-stat .sl { font-size: 12px; color: #6b7280; line-height: 1.5; }
+
+
+    /* ════════════════════════════════
+       SLIDE 6  참여 & 마무리
+    ════════════════════════════════ */
+    .s6 {
+      background: linear-gradient(135deg, #0b1f3a 0%, #0e2d6b 60%, #7a2800 100%);
+      display: flex; flex-direction: column;
+    }
+    .s6-header {
+      padding: 20px 64px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .s6-htitle { font-size: 15px; font-weight: 700; color: rgba(255,255,255,0.65); }
+    .s6-htitle em { color: #f47920; font-style: normal; }
+    .s6-org { font-size: 11px; color: rgba(255,255,255,0.28); letter-spacing: 1px; }
+
+    .s6-body {
+      flex: 1; display: flex; align-items: center;
+      padding: 0 100px; gap: 80px;
+    }
+
+    .s6-left { flex: 1; }
+    .s6-pill {
+      display: inline-block;
+      background: rgba(244,121,32,0.18); border: 1px solid rgba(244,121,32,0.4);
+      color: #ffb366; font-size: 11px; font-weight: 600;
+      letter-spacing: 2px; padding: 5px 16px;
+      border-radius: 999px; margin-bottom: 22px;
+    }
+    .s6-slogan {
+      font-size: 54px; font-weight: 900;
+      color: #fff; line-height: 1.2;
+      letter-spacing: -2.5px; margin-bottom: 24px;
+    }
+    .s6-slogan .acc { color: #f47920; }
+    .s6-call {
+      font-size: 16px; color: rgba(255,255,255,0.45);
+      font-weight: 300; line-height: 1.8;
+    }
+
+    .s6-right { flex-shrink: 0; text-align: center; min-width: 240px; }
+    .qr-box {
+      width: 180px; height: 180px;
+      margin: 0 auto 20px;
+      border: 2px dashed rgba(255,255,255,0.18);
+      border-radius: 16px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 8px; background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.28);
+      position: relative;
+    }
+    /* QR 모서리 장식 */
+    .qr-box::before {
+      content: ''; position: absolute;
+      top: 8px; left: 8px;
+      width: 22px; height: 22px;
+      border-top: 2px solid rgba(255,255,255,0.25);
+      border-left: 2px solid rgba(255,255,255,0.25);
+      border-radius: 2px 0 0 0;
+    }
+    .qr-box::after {
+      content: ''; position: absolute;
+      bottom: 8px; right: 8px;
+      width: 22px; height: 22px;
+      border-bottom: 2px solid rgba(255,255,255,0.25);
+      border-right: 2px solid rgba(255,255,255,0.25);
+      border-radius: 0 0 2px 0;
+    }
+    .qr-icon { font-size: 44px; }
+    .qr-text { font-size: 10.5px; font-weight: 500; }
+
+    .s6-btn-group { display: flex; flex-direction: column; gap: 10px; }
+    .s6-btn {
+      display: block; padding: 13px 28px;
+      border-radius: 999px; font-size: 13.5px; font-weight: 700;
+      font-family: inherit; text-align: center; letter-spacing: 0.3px;
+    }
+    .s6-btn-primary { background: #f47920; color: #fff; border: none; box-shadow: 0 4px 16px rgba(244,121,32,0.4); }
+    .s6-btn-secondary {
+      background: transparent; color: rgba(255,255,255,0.65);
+      border: 1.5px solid rgba(255,255,255,0.22);
+    }
+
+
+    /* ════════════════════════════════
+       인쇄 / PDF
+    ════════════════════════════════ */
+    @media print {
+      @page { size: 1280px 720px; margin: 0; }
+      body { background: white; padding: 0; gap: 0; display: block; }
+      .slide { page-break-after: always; display: block; width: 1280px; height: 720px; }
+      .slide:last-child { page-break-after: auto; }
+      .deck-label, .btn-pdf { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<button class="btn-pdf" onclick="window.print()">🖨 PDF로 저장</button>
+
+
+<!-- ══════════════════════════════════════
+     SLIDE 01  표지
+══════════════════════════════════════ -->
+<div class="deck-label">SLIDE 01 / 06 &nbsp;—&nbsp; 표지</div>
+<section class="slide s1">
+
+  <div class="s1-topbar">
+    <div class="s1-logo">
+      <div class="s1-logo-mark">도</div>
+      <div class="s1-logo-text">
+        한국도로공사
+        <span>Korea Expressway Corporation</span>
+      </div>
+    </div>
+    <div class="s1-tag">SAFETY CAMPAIGN 2026 &nbsp;·&nbsp; AI 데이터처</div>
+  </div>
+
+  <div class="s1-body">
+    <div class="s1-deco s1-deco-a"></div>
+    <div class="s1-deco s1-deco-b"></div>
+    <div class="s1-deco-lines">
+      <div class="s1-deco-line" style="height:140px;"></div>
+      <div class="s1-deco-line" style="height:100px; margin-top:40px;"></div>
+      <div class="s1-deco-line" style="height:180px; margin-top:-20px;"></div>
+    </div>
+
+    <div class="s1-content">
+      <div class="s1-pill">사내 안전운전 캠페인</div>
+      <div class="s1-slogan">
+        속도보다 소중한 건<br>
+        <span class="acc">당신의 하루</span>입니다
+      </div>
+      <div class="s1-sub">모든 도로 위에서, 안전이 먼저입니다 &nbsp;·&nbsp; Drive Safe, Arrive Safe</div>
+      <div class="s1-meta">
+        <div class="s1-period">
+          2026. 06. 01 <span class="sep">—</span> 2026. 08. 31
+          &nbsp;<span style="color:rgba(255,255,255,0.35);font-size:14px;font-weight:400;">총 92일간</span>
+        </div>
+        <div class="s1-badge">전국 전 임직원 대상</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="road-stripe bottom"></div>
+  <div class="pg" style="color:rgba(255,255,255,0.2);">01 / 06</div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     SLIDE 02  캠페인 소개
+══════════════════════════════════════ -->
+<div class="deck-label">SLIDE 02 / 06 &nbsp;—&nbsp; 캠페인 소개</div>
+<section class="slide s2">
+
+  <div class="s2-header">
+    <div class="s2-htitle">캠페인 <em>소개</em></div>
+    <div class="s2-hsub">Campaign Overview</div>
+  </div>
+
+  <div class="s2-body">
+    <div class="s2-left">
+      <div class="s2-intro">
+        한국도로공사 임직원의 <strong>안전운전 의식 제고</strong>를 위해
+        AI 데이터처 주관으로 시행하는 <strong>하계 사내 캠페인</strong>입니다.<br><br>
+        3대 핵심 실천을 내재화하고, 온라인 서약 및 현장 교육을 통해
+        <strong>사내 교통사고 전년 대비 20% 감소</strong>를 목표합니다.
+      </div>
+      <div class="s2-divider"></div>
+      <div class="s2-chips">
+        <span class="s2-chip">전 직원 참여</span>
+        <span class="s2-chip">현장 교육 병행</span>
+        <span class="s2-chip">우수 실천자 포상</span>
+        <span class="s2-chip">온라인 서약</span>
+      </div>
+    </div>
+    <div class="s2-right">
+      <div class="s2-box">
+        <div class="s2-box-label">캠페인 기간</div>
+        <div class="s2-box-value">2026. 06. 01 — 2026. 08. 31 <small>92일간</small></div>
+      </div>
+      <div class="s2-box">
+        <div class="s2-box-label">주관 · 운영</div>
+        <div class="s2-box-value">AI 데이터처 <small>/ AI모델개발부 배포·유지관리</small></div>
+      </div>
+      <div class="s2-box">
+        <div class="s2-box-label">대상</div>
+        <div class="s2-box-value">전국 전 사업소 및 현장 임직원</div>
+      </div>
+      <div class="s2-box">
+        <div class="s2-box-label">참여율 목표</div>
+        <div class="s2-box-value">온라인 서약 <small>전체 임직원 대비</small> 60% 이상</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="road-stripe bottom"></div>
+  <div class="pg" style="color:#9ca3af;">02 / 06</div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     SLIDE 03  규정 속도 준수
+══════════════════════════════════════ -->
+<div class="deck-label">SLIDE 03 / 06 &nbsp;—&nbsp; 핵심 실천 01</div>
+<section class="slide s3 rule-slide">
+
+  <div class="rl">
+    <div class="rl-bg-num">01</div>
+    <div class="rl-num">RULE · 01</div>
+    <div class="rl-icon">🚗</div>
+    <div class="rl-title">규정 속도<br>준수</div>
+    <div class="rl-badge">속도 관리</div>
+    <div class="rl-bar"></div>
+  </div>
+
+  <div class="rr">
+    <div class="rr-headline">
+      빠른 도착보다<br>
+      <span class="hl">안전한 귀가</span>가 먼저입니다
+    </div>
+    <div class="rr-body">
+      제한속도 10km/h만 초과해도 사고 위험은 2배 이상 증가합니다.
+      속도는 충돌 에너지의 제곱에 비례하며, 단 1초의 판단이
+      생사를 가릅니다. 표지판의 숫자는 권고가 아닌 생명선입니다.
+    </div>
+    <div class="rr-stats">
+      <div class="rr-stat">
+        <div class="sv">2배↑</div>
+        <div class="sl">10km/h 초과 시<br>사고 위험 증가율</div>
+      </div>
+      <div class="rr-stat">
+        <div class="sv">0.3초</div>
+        <div class="sl">100km/h에서<br>브레이크 반응 공주거리</div>
+      </div>
+      <div class="rr-stat">
+        <div class="sv">속도 준수</div>
+        <div class="sl">가장 쉽고 확실한<br>사고 예방 방법</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pg" style="color:rgba(255,255,255,0.2);">03 / 06</div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     SLIDE 04  운전 중 휴대폰 금지
+══════════════════════════════════════ -->
+<div class="deck-label">SLIDE 04 / 06 &nbsp;—&nbsp; 핵심 실천 02</div>
+<section class="slide s4 rule-slide">
+
+  <div class="rl" style="background: #1a0a00;">
+    <div class="rl-bg-num" style="color:rgba(255,255,255,0.04);">02</div>
+    <div class="rl-num" style="color:#f47920;">RULE · 02</div>
+    <div class="rl-icon">📵</div>
+    <div class="rl-title">운전 중<br>휴대폰 금지</div>
+    <div class="rl-badge" style="background:rgba(244,121,32,0.2);border-color:rgba(244,121,32,0.4);color:#fbd38d;">집중 운전</div>
+    <div class="rl-bar"></div>
+  </div>
+
+  <div class="rr">
+    <div class="rr-headline">
+      스마트폰 한 번의 확인이<br>
+      <span class="hl" style="color:#f47920;">음주운전과 동일합니다</span>
+    </div>
+    <div class="rr-body">
+      주행 중 스마트폰 사용은 음주운전(혈중알코올 0.08%)과
+      동일한 수준의 반응 속도 저하를 유발합니다.
+      시선이 화면에 머무는 2초 동안 차량은 50m 이상을 주행합니다.
+      급한 연락은 반드시 안전한 곳에 정차 후 처리하세요.
+    </div>
+    <div class="rr-stats">
+      <div class="rr-stat">
+        <div class="sv" style="color:#f47920;">≒ 음주</div>
+        <div class="sl">스마트폰 사용 시<br>반응 속도 저하 수준</div>
+      </div>
+      <div class="rr-stat">
+        <div class="sv" style="color:#f47920;">50m↑</div>
+        <div class="sl">2초 시선 이탈 시<br>무방비 주행 거리</div>
+      </div>
+      <div class="rr-stat">
+        <div class="sv" style="color:#f47920;">3배↑</div>
+        <div class="sl">사고 위험<br>증가 배수</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pg" style="color:rgba(255,255,255,0.2);">04 / 06</div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     SLIDE 05  졸음운전 즉시 대응
+══════════════════════════════════════ -->
+<div class="deck-label">SLIDE 05 / 06 &nbsp;—&nbsp; 핵심 실천 03</div>
+<section class="slide s5 rule-slide">
+
+  <div class="rl" style="background:#0a1628;">
+    <div class="rl-bg-num" style="color:rgba(255,255,255,0.04);">03</div>
+    <div class="rl-num">RULE · 03</div>
+    <div class="rl-icon">😴</div>
+    <div class="rl-title">졸음운전<br>즉시 대응</div>
+    <div class="rl-badge">피로 관리</div>
+    <div class="rl-bar"></div>
+  </div>
+
+  <div class="rr">
+    <div class="rr-headline">
+      졸음이 오면 즉시 멈추세요<br>
+      <span class="hl">20분 수면이 생명을 지킵니다</span>
+    </div>
+    <div class="rr-body">
+      졸음운전은 전체 고속도로 사망사고의 약 30%를 차지합니다.
+      졸음을 억지로 참으며 운전을 계속하는 것은 최고 위험 행동입니다.
+      첫 졸음 신호에 즉시 졸음쉼터·휴게소를 이용하고,
+      짧은 낮잠으로 충분히 회복 후 출발하세요.
+    </div>
+    <div class="rr-stats">
+      <div class="rr-stat">
+        <div class="sv">30%</div>
+        <div class="sl">졸음운전이 차지하는<br>고속도로 사망사고 비율</div>
+      </div>
+      <div class="rr-stat">
+        <div class="sv">20분</div>
+        <div class="sl">졸음쉼터 낮잠으로<br>집중력 회복 시간</div>
+      </div>
+      <div class="rr-stat">
+        <div class="sv">즉시 정차</div>
+        <div class="sl">졸음 신호 시<br>유일한 정답</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pg" style="color:rgba(255,255,255,0.2);">05 / 06</div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     SLIDE 06  참여 방법 & 마무리
+══════════════════════════════════════ -->
+<div class="deck-label">SLIDE 06 / 06 &nbsp;—&nbsp; 참여 방법 & 마무리</div>
+<section class="slide s6">
+
+  <div class="road-stripe top"></div>
+
+  <div class="s6-header">
+    <div class="s6-htitle">지금 바로 <em>함께</em> 해주세요</div>
+    <div class="s6-org">한국도로공사 &nbsp;·&nbsp; AI 데이터처 주관</div>
+  </div>
+
+  <div class="s6-body">
+    <div class="s6-left">
+      <div class="s6-pill">사내 안전운전 캠페인 2026</div>
+      <div class="s6-slogan">
+        오늘의 서약이<br>
+        <span class="acc">내일의 안전</span>을 만듭니다
+      </div>
+      <div class="s6-call">
+        QR코드를 스캔하거나 버튼을 클릭하여<br>
+        온라인 서약에 참여하고, 인증서를 발급받으세요.<br>
+        추첨을 통해 소정의 선물을 드립니다.
+      </div>
+    </div>
+
+    <div class="s6-right">
+      <div class="qr-box">
+        <div class="qr-icon">⬛</div>
+        <div class="qr-text">QR 코드 삽입</div>
+      </div>
+      <div class="s6-btn-group">
+        <div class="s6-btn s6-btn-primary">온라인 서약 참여하기</div>
+        <div class="s6-btn s6-btn-secondary">캠페인 참여 인증하기</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="road-stripe bottom"></div>
+  <div class="pg" style="color:rgba(255,255,255,0.2);">06 / 06</div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2026년 1분기 업무보고서 통합본 | 교통인프라본부 스마트도로팀</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+      background: #dde1e8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 20px;
+      gap: 28px;
+    }
+
+    /* ── 공통 페이지 ── */
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      background: #fff;
+      box-shadow: 0 4px 28px rgba(0,0,0,0.14);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ════════════════════════════════
+       표지
+    ════════════════════════════════ */
+    .cover {
+      background: #0b1f3a;
+      overflow: hidden;
+    }
+
+    .cover-accent {
+      height: 5px;
+      background: linear-gradient(90deg, #1d4ed8 0%, #3b82f6 60%, #f59e0b 100%);
+      flex-shrink: 0;
+    }
+
+    .cover-topbar {
+      padding: 20px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .cover-org {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cover-org-mark {
+      width: 34px; height: 34px;
+      background: #1d4ed8;
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 900; color: #fff;
+    }
+    .cover-org-name {
+      font-size: 12.5px; font-weight: 500;
+      color: rgba(255,255,255,0.72); line-height: 1.4;
+    }
+    .cover-org-name span {
+      display: block; font-size: 10px;
+      color: rgba(255,255,255,0.3); font-weight: 300; letter-spacing: 0.8px;
+    }
+    .cover-docid {
+      font-size: 10px; letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.22);
+    }
+
+    .cover-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 52px;
+      position: relative;
+    }
+
+    /* 장식 원 */
+    .deco { position: absolute; border-radius: 50%; pointer-events: none; }
+    .deco-a {
+      width: 380px; height: 380px;
+      top: -80px; right: -80px;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+    .deco-b {
+      width: 240px; height: 240px;
+      top: -30px; right: -30px;
+      border: 1px solid rgba(59,130,246,0.12);
+      background: rgba(29,78,216,0.07);
+    }
+    .deco-c {
+      width: 300px; height: 300px;
+      bottom: -100px; left: -60px;
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+    /* 우측 세로 줄 장식 */
+    .deco-lines {
+      position: absolute;
+      right: 52px; top: 50%;
+      transform: translateY(-50%);
+      display: flex; gap: 10px;
+    }
+    .deco-line {
+      width: 2px; border-radius: 1px;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .cover-quarter-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(29,78,216,0.22);
+      border: 1px solid rgba(59,130,246,0.3);
+      color: #93c5fd;
+      font-size: 10.5px; font-weight: 600;
+      letter-spacing: 2.5px; padding: 5px 16px;
+      border-radius: 999px; margin-bottom: 26px;
+      width: fit-content; text-transform: uppercase;
+    }
+    .cover-quarter-tag::before {
+      content: ''; width: 6px; height: 6px;
+      background: #3b82f6; border-radius: 50%;
+    }
+
+    .cover-title {
+      font-size: 48px; font-weight: 900;
+      color: #fff; line-height: 1.15;
+      letter-spacing: -2.5px; margin-bottom: 10px;
+    }
+    .cover-title .hl { color: #60a5fa; }
+
+    .cover-sub {
+      font-size: 14px; font-weight: 300;
+      color: rgba(255,255,255,0.42);
+      letter-spacing: 0.5px; margin-bottom: 40px;
+    }
+
+    .cover-rule {
+      width: 52px; height: 3px;
+      background: linear-gradient(90deg, #1d4ed8, #3b82f6);
+      border-radius: 2px; margin-bottom: 38px;
+    }
+
+    .cover-meta {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 11px 22px;
+      max-width: 360px;
+    }
+    .cm-label {
+      font-size: 10.5px; color: rgba(255,255,255,0.3);
+      font-weight: 400; letter-spacing: 0.5px; padding-top: 1px;
+    }
+    .cm-value {
+      font-size: 12.5px; color: rgba(255,255,255,0.78); font-weight: 500;
+    }
+
+    .cover-bottom {
+      padding: 18px 52px 22px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .cover-badge-internal {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.22);
+      color: rgba(239,68,68,0.65);
+      font-size: 9.5px; font-weight: 700;
+      letter-spacing: 1.5px; padding: 3px 12px;
+      border-radius: 3px; text-transform: uppercase;
+    }
+    .cover-contact {
+      font-size: 10px; color: rgba(255,255,255,0.18); letter-spacing: 0.5px;
+    }
+
+
+    /* ════════════════════════════════
+       목차
+    ════════════════════════════════ */
+    .toc-wrap {
+      padding: 18mm 18mm 14mm;
+      display: flex; flex-direction: column; height: 100%;
+    }
+
+    .doc-header {
+      border-bottom: 3px solid #1d4ed8;
+      padding-bottom: 14px; margin-bottom: 26px;
+      display: flex; justify-content: space-between; align-items: flex-end;
+    }
+    .dh-left .dh-org { font-size: 11px; color: #6b7280; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .dh-left .dh-title { font-size: 22px; font-weight: 700; color: #111827; letter-spacing: -0.5px; }
+    .dh-right { text-align: right; font-size: 11.5px; color: #6b7280; line-height: 1.7; }
+    .dh-right strong { color: #374151; }
+
+    .toc-sub-label {
+      font-size: 10.5px; font-weight: 700;
+      letter-spacing: 3px; color: #9ca3af;
+      text-transform: uppercase; margin-bottom: 14px;
+    }
+
+    .toc-entries {
+      display: flex; flex-direction: column; gap: 10px;
+      margin-bottom: 28px;
+    }
+    .toc-entry {
+      display: flex; align-items: stretch;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px; overflow: hidden;
+      text-decoration: none; color: inherit;
+      transition: box-shadow 0.18s, transform 0.18s;
+      cursor: pointer;
+    }
+    .toc-entry:hover {
+      box-shadow: 0 3px 14px rgba(29,78,216,0.13);
+      transform: translateY(-1px);
+    }
+    .te-stripe {
+      width: 5px; flex-shrink: 0;
+    }
+    .toc-entry:nth-child(1) .te-stripe { background: #1d4ed8; }
+    .toc-entry:nth-child(2) .te-stripe { background: #3b82f6; }
+    .toc-entry:nth-child(3) .te-stripe { background: #60a5fa; }
+
+    .te-num {
+      width: 54px; background: #f8fafc;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; font-weight: 900;
+      border-right: 1px solid #f0f2f5; flex-shrink: 0;
+    }
+    .toc-entry:nth-child(1) .te-num { color: #bfdbfe; }
+    .toc-entry:nth-child(2) .te-num { color: #93c5fd; }
+    .toc-entry:nth-child(3) .te-num { color: #60a5fa; }
+
+    .te-body { flex: 1; padding: 13px 16px; }
+    .te-month {
+      font-size: 14px; font-weight: 700; color: #111827; margin-bottom: 7px;
+    }
+    .te-month span {
+      font-size: 11px; font-weight: 400;
+      color: #9ca3af; margin-left: 8px;
+    }
+    .te-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+    .te-chip {
+      background: #eff6ff; border: 1px solid #bfdbfe;
+      color: #1e40af; font-size: 10.5px; font-weight: 500;
+      padding: 2px 9px; border-radius: 999px;
+    }
+
+    .te-right {
+      padding: 13px 16px; display: flex;
+      flex-direction: column; align-items: flex-end;
+      justify-content: space-between; flex-shrink: 0;
+    }
+    .te-date {
+      font-size: 10px; font-weight: 600;
+      padding: 3px 10px; border-radius: 4px;
+      color: #fff; letter-spacing: 0.3px;
+    }
+    .toc-entry:nth-child(1) .te-date { background: #1d4ed8; }
+    .toc-entry:nth-child(2) .te-date { background: #3b82f6; }
+    .toc-entry:nth-child(3) .te-date { background: #60a5fa; }
+
+    .te-pageref {
+      font-size: 11px; color: #9ca3af;
+    }
+    .te-pageref strong {
+      font-size: 15px; font-weight: 700; color: #374151;
+    }
+
+    /* 분기 KPI 요약 */
+    .kpi-box {
+      background: #f8fafc; border: 1px solid #e5e7eb;
+      border-radius: 8px; padding: 16px 20px;
+    }
+    .kpi-box-title {
+      font-size: 11.5px; font-weight: 700; color: #374151;
+      margin-bottom: 14px; display: flex; align-items: center; gap: 7px;
+    }
+    .kpi-box-title::before {
+      content: ''; width: 3px; height: 14px;
+      background: #f59e0b; border-radius: 2px;
+    }
+    .kpi-row {
+      display: grid; grid-template-columns: repeat(4,1fr); gap: 8px;
+    }
+    .kpi-item { text-align: center; }
+    .kpi-val {
+      font-size: 21px; font-weight: 900; color: #1d4ed8;
+      line-height: 1; margin-bottom: 5px;
+    }
+    .kpi-lbl { font-size: 10px; color: #6b7280; line-height: 1.4; }
+
+    .toc-footer {
+      margin-top: auto; padding-top: 14px;
+      border-top: 1px solid #e5e7eb;
+      font-size: 10.5px; color: #9ca3af; text-align: center;
+    }
+
+
+    /* ════════════════════════════════
+       월별 보고서 페이지 공통
+    ════════════════════════════════ */
+    .report-wrap {
+      padding: 18mm 18mm 14mm;
+      display: flex; flex-direction: column;
+      height: 100%;
+    }
+
+    .rpt-header {
+      border-bottom: 3px solid #1d4ed8;
+      padding-bottom: 14px; margin-bottom: 20px;
+      display: flex; justify-content: space-between; align-items: flex-end;
+    }
+    .rh-left .rh-org { font-size: 11px; color: #6b7280; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .rh-left .rh-title { font-size: 22px; font-weight: 700; color: #111827; letter-spacing: -0.5px; }
+    .rh-left .rh-sub { font-size: 13px; color: #1d4ed8; font-weight: 500; margin-top: 3px; }
+    .rh-right { text-align: right; font-size: 11.5px; color: #6b7280; line-height: 1.7; }
+    .rh-right strong { color: #374151; }
+
+    .section { margin-bottom: 22px; }
+    .sec-title {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13.5px; font-weight: 700; color: #1d4ed8; margin-bottom: 10px;
+    }
+    .sec-title::before {
+      content: ''; width: 4px; height: 16px;
+      background: #1d4ed8; border-radius: 2px;
+    }
+
+    .task-list { display: flex; flex-direction: column; gap: 8px; }
+    .task-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: #f8fafc; border: 1px solid #e5e7eb;
+      border-left: 3px solid #3b82f6; border-radius: 6px; padding: 10px 14px;
+    }
+    .task-num {
+      min-width: 22px; height: 22px; background: #1d4ed8; color: #fff;
+      font-size: 11px; font-weight: 700; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 1px; flex-shrink: 0;
+    }
+    .task-name { font-size: 13px; font-weight: 600; color: #111827; margin-bottom: 3px; }
+    .task-desc { font-size: 12px; color: #6b7280; line-height: 1.65; }
+    .badge {
+      display: inline-block; font-size: 10px; font-weight: 600;
+      padding: 1px 7px; border-radius: 999px; margin-left: 6px; vertical-align: middle;
+    }
+    .done { background: #dcfce7; color: #15803d; }
+    .prog { background: #dbeafe; color: #1d4ed8; }
+
+    .issue-list { display: flex; flex-direction: column; gap: 7px; }
+    .issue-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 9px 14px; background: #fffbeb;
+      border: 1px solid #fde68a; border-left: 3px solid #f59e0b;
+      border-radius: 6px; font-size: 12.5px; color: #374151; line-height: 1.6;
+    }
+    .issue-item.critical { background: #fef2f2; border-color: #fca5a5; border-left-color: #ef4444; }
+    .ii-icon { font-size: 14px; margin-top: 1px; flex-shrink: 0; }
+
+    .plan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .plan-item { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px; padding: 10px 14px; }
+    .plan-date { font-size: 10.5px; color: #0284c7; font-weight: 600; margin-bottom: 3px; }
+    .plan-text { font-size: 12.5px; color: #111827; font-weight: 500; }
+
+    .rpt-footer {
+      margin-top: auto; padding-top: 14px;
+      border-top: 1px solid #e5e7eb;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 10.5px; color: #9ca3af;
+    }
+    .sign-row { display: flex; gap: 28px; }
+    .sign-box { text-align: center; }
+    .sign-lbl { font-size: 10px; color: #6b7280; margin-bottom: 18px; }
+    .sign-line { border-top: 1px solid #9ca3af; width: 64px; margin: 0 auto; }
+
+
+    /* ─── 인쇄 ─── */
+    @media print {
+      body { background: #fff; padding: 0; gap: 0; }
+      .page {
+        width: 100%; min-height: auto; box-shadow: none;
+        page-break-after: always;
+      }
+      .page:last-child { page-break-after: auto; }
+      .cover { min-height: 100vh; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     표지
+══════════════════════════════════ -->
+<div class="page cover" id="cover">
+  <div class="cover-accent"></div>
+
+  <div class="cover-topbar">
+    <div class="cover-org">
+      <div class="cover-org-mark">도</div>
+      <div class="cover-org-name">
+        한국도로공사
+        <span>Korea Expressway Corporation</span>
+      </div>
+    </div>
+    <div class="cover-docid">DOC · 2026-SRT-Q1</div>
+  </div>
+
+  <div class="cover-body">
+    <!-- 장식 -->
+    <div class="deco deco-a"></div>
+    <div class="deco deco-b"></div>
+    <div class="deco deco-c"></div>
+    <div class="deco-lines">
+      <div class="deco-line" style="height:140px;"></div>
+      <div class="deco-line" style="height:100px; margin-top:40px;"></div>
+      <div class="deco-line" style="height:180px; margin-top:-20px;"></div>
+    </div>
+
+    <div class="cover-quarter-tag">Q1 · 2026 · Quarterly Report</div>
+
+    <div class="cover-title">
+      <span class="hl">2026년</span> 1분기<br>업무보고서
+    </div>
+    <div class="cover-sub">Q1 Team Work Report &nbsp;·&nbsp; January – March 2026</div>
+    <div class="cover-rule"></div>
+
+    <div class="cover-meta">
+      <div class="cm-label">대상 기간</div>
+      <div class="cm-value">2026. 01. 01. – 2026. 03. 31.</div>
+      <div class="cm-label">작성 부서</div>
+      <div class="cm-value">교통인프라본부 스마트도로팀</div>
+      <div class="cm-label">보 고 일</div>
+      <div class="cm-value">2026. 03. 31.</div>
+      <div class="cm-label">문서번호</div>
+      <div class="cm-value">2026-SRT-Q1</div>
+    </div>
+  </div>
+
+  <div class="cover-bottom">
+    <div class="cover-badge-internal">내부 문서</div>
+    <div class="cover-contact">교통인프라본부 스마트도로팀 &nbsp;·&nbsp; 내선 1234 &nbsp;·&nbsp; smartroad@ex.co.kr</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     목차
+══════════════════════════════════ -->
+<div class="page" id="toc">
+  <div class="toc-wrap">
+
+    <div class="doc-header">
+      <div class="dh-left">
+        <div class="dh-org">교통인프라본부 · 스마트도로팀</div>
+        <div class="dh-title">목 차</div>
+      </div>
+      <div class="dh-right">
+        <div>대상 기간 <strong>2026. Q1</strong></div>
+        <div>문서번호 <strong>2026-SRT-Q1</strong></div>
+      </div>
+    </div>
+
+    <div class="toc-sub-label">Monthly Reports</div>
+
+    <div class="toc-entries">
+
+      <a class="toc-entry" href="#jan"
+         onclick="document.getElementById('jan').scrollIntoView({behavior:'smooth'});return false;">
+        <div class="te-stripe"></div>
+        <div class="te-num">01</div>
+        <div class="te-body">
+          <div class="te-month">1월 업무 보고서 <span>January 2026</span></div>
+          <div class="te-chips">
+            <span class="te-chip">대시보드 고도화</span>
+            <span class="te-chip">루프 센서 현장 점검</span>
+            <span class="te-chip">빅데이터 분석 계획</span>
+          </div>
+        </div>
+        <div class="te-right">
+          <div class="te-date">2026. 01. 31.</div>
+          <div class="te-pageref">p.<strong>3</strong></div>
+        </div>
+      </a>
+
+      <a class="toc-entry" href="#feb"
+         onclick="document.getElementById('feb').scrollIntoView({behavior:'smooth'});return false;">
+        <div class="te-stripe"></div>
+        <div class="te-num">02</div>
+        <div class="te-body">
+          <div class="te-month">2월 업무 보고서 <span>February 2026</span></div>
+          <div class="te-chips">
+            <span class="te-chip">VDS 센서 교체</span>
+            <span class="te-chip">설 연휴 교통 분석</span>
+            <span class="te-chip">국토연구원 MOU 체결</span>
+          </div>
+        </div>
+        <div class="te-right">
+          <div class="te-date">2026. 02. 28.</div>
+          <div class="te-pageref">p.<strong>4</strong></div>
+        </div>
+      </a>
+
+      <a class="toc-entry" href="#mar"
+         onclick="document.getElementById('mar').scrollIntoView({behavior:'smooth'});return false;">
+        <div class="te-stripe"></div>
+        <div class="te-num">03</div>
+        <div class="te-body">
+          <div class="te-month">3월 업무 보고서 <span>March 2026</span></div>
+          <div class="te-chips">
+            <span class="te-chip">응답 지연 패치</span>
+            <span class="te-chip">예측 모델 파일럿 1차</span>
+            <span class="te-chip">1분기 실적 취합</span>
+          </div>
+        </div>
+        <div class="te-right">
+          <div class="te-date">2026. 03. 31.</div>
+          <div class="te-pageref">p.<strong>5</strong></div>
+        </div>
+      </a>
+
+    </div>
+
+    <div class="toc-sub-label">1분기 핵심 지표</div>
+    <div class="kpi-box">
+      <div class="kpi-box-title">Q1 주요 성과 요약</div>
+      <div class="kpi-row">
+        <div class="kpi-item">
+          <div class="kpi-val">9건</div>
+          <div class="kpi-lbl">완료 업무</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-val">98.2%</div>
+          <div class="kpi-lbl">센서 정비율</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-val">82.4%</div>
+          <div class="kpi-lbl">예측 정확도<br>(MAE 기준)</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-val">96.7%</div>
+          <div class="kpi-lbl">데이터 수집<br>안정화율</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toc-footer">
+      교통인프라본부 스마트도로팀 &nbsp;·&nbsp; 내선 1234 &nbsp;·&nbsp; smartroad@ex.co.kr &nbsp;|&nbsp; © 2026 Korea Expressway Corporation.
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     1월
+══════════════════════════════════ -->
+<div class="page" id="jan">
+  <div class="report-wrap">
+
+    <div class="rpt-header">
+      <div class="rh-left">
+        <div class="rh-org">교통인프라본부 · 스마트도로팀</div>
+        <div class="rh-title">1월 업무 보고서</div>
+        <div class="rh-sub">Monthly Work Report — January 2026</div>
+      </div>
+      <div class="rh-right">
+        <div>보고일 <strong>2026. 01. 31.</strong></div>
+        <div>작성자 <strong>스마트도로팀</strong></div>
+        <div>문서번호 <strong>2026-SRT-01</strong></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">이번 달 주요 업무</div>
+      <div class="task-list">
+        <div class="task-item">
+          <div class="task-num">1</div>
+          <div class="task-content">
+            <div class="task-name">교통량 실시간 모니터링 대시보드 고도화 <span class="badge done">완료</span></div>
+            <div class="task-desc">노선별·시간대별 교통 데이터 시각화 개선, KPI 카드 4종 추가, 급증 경고 알림 로직(critical/warning/info) 구현 완료. 840개 레코드 기반 필터 렌더링 성능 최적화.</div>
+          </div>
+        </div>
+        <div class="task-item">
+          <div class="task-num">2</div>
+          <div class="task-content">
+            <div class="task-name">경부선·서해안선 구간 현장 점검 <span class="badge done">완료</span></div>
+            <div class="task-desc">1월 8일~12일 차로 감지기(루프 센서) 오작동 6개소 현장 확인 및 교체 조치 완료. 데이터 누락 구간 보정 기준안 수립.</div>
+          </div>
+        </div>
+        <div class="task-item">
+          <div class="task-num">3</div>
+          <div class="task-content">
+            <div class="task-name">2026년 교통 빅데이터 분석 계획 수립 <span class="badge prog">진행중</span></div>
+            <div class="task-desc">외부 기관(국토연구원) 협업 범위 협의, 데이터 제공 범위 및 개인정보 비식별화 기준 초안 작성. 2월 중 MOU 체결 예정.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">진행 중 이슈</div>
+      <div class="issue-list">
+        <div class="issue-item critical">
+          <span class="ii-icon">🔴</span>
+          <div><strong>[긴급] 남해선 3구간 VDS 센서 통신 불량</strong> — 1월 24일부터 데이터 수신 중단. 현재 임시 수기 데이터로 대체 중. 장비 교체 발주 완료, 2월 3주차 복구 예정.</div>
+        </div>
+        <div class="issue-item">
+          <span class="ii-icon">🟡</span>
+          <div><strong>[주의] 대시보드 구형 브라우저 호환성 문제</strong> — IE11 환경에서 Chart.js 4.x 렌더링 오류 발생. 사용자 브라우저 업그레이드 안내 공문 배포 예정.</div>
+        </div>
+        <div class="issue-item">
+          <span class="ii-icon">🔵</span>
+          <div><strong>[검토] 설 연휴(1/28~30) 특별 교통 대책 효과 분석</strong> — 수집 데이터 정리 중. 2월 2주차 내 결과 보고서 제출 예정.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">다음 달 계획 (2월)</div>
+      <div class="plan-grid">
+        <div class="plan-item">
+          <div class="plan-date">2월 1주 (2/2~7)</div>
+          <div class="plan-text">남해선 VDS 센서 복구 완료 및 정상 데이터 수신 확인</div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-date">2월 2주 (2/10~14)</div>
+          <div class="plan-text">설 연휴 교통 데이터 분석 결과 보고서 내부 공유</div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-date">2월 3주 (2/17~21)</div>
+          <div class="plan-text">국토연구원 MOU 체결 및 빅데이터 협업 킥오프 회의</div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-date">2월 4주 (2/24~28)</div>
+          <div class="plan-text">1분기 교통량 예측 모델 파일럿 테스트 착수</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rpt-footer">
+      <div>교통인프라본부 스마트도로팀 · 내선 1234 · smartroad@ex.co.kr</div>
+      <div class="sign-row">
+        <div class="sign-box"><div class="sign-lbl">작성</div><div class="sign-line"></div></div>
+        <div class="sign-box"><div class="sign-lbl">검토</div><div class="sign-line"></div></div>
+        <div class="sign-box"><div class="sign-lbl">결재</div><div class="sign-line"></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     2월
+══════════════════════════════════ -->
+<div class="page" id="feb">
+  <div class="report-wrap">
+
+    <div class="rpt-header">
+      <div class="rh-left">
+        <div class="rh-org">교통인프라본부 · 스마트도로팀</div>
+        <div class="rh-title">2월 업무 보고서</div>
+        <div class="rh-sub">Monthly Work Report — February 2026</div>
+      </div>
+      <div class="rh-right">
+        <div>보고일 <strong>2026. 02. 28.</strong></div>
+        <div>작성자 <strong>스마트도로팀</strong></div>
+        <div>문서번호 <strong>2026-SRT-02</strong></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">이번 달 주요 업무</div>
+      <div class="task-list">
+        <div class="task-item">
+          <div class="task-num">1</div>
+          <div class="task-content">
+            <div class="task-name">남해선 VDS 센서 교체 및 데이터 정상화 <span class="badge done">완료</span></div>
+            <div class="task-desc">1월부터 통신 불량이던 남해선 3구간 VDS 센서 5기 전량 교체 완료(2/11). 데이터 수신 정상화 확인 후 임시 수기 데이터 폐기. 주변 2구간 센서 예방 점검 병행 실시.</div>
+          </div>
+        </div>
+        <div class="task-item">
+          <div class="task-num">2</div>
+          <div class="task-content">
+            <div class="task-name">설 연휴 교통 데이터 분석 보고서 제출 <span class="badge done">완료</span></div>
+            <div class="task-desc">1/28~30 설 연휴 기간 5개 노선 교통량·평균속도 분석 완료. 경부선 귀성 피크 오후 2시 최대 혼잡 구간 확인. 결과 보고서 내부 공유 및 유관 부서 배포(2/14).</div>
+          </div>
+        </div>
+        <div class="task-item">
+          <div class="task-num">3</div>
+          <div class="task-content">
+            <div class="task-name">국토연구원 빅데이터 협업 MOU 체결 <span class="badge done">완료</span></div>
+            <div class="task-desc">2/19 MOU 체결 및 킥오프 회의 개최. 2026년 상반기 교통량 예측 모델 공동 개발 일정 합의. 데이터 제공 범위(5개 노선, 2023~2025년 원시 데이터) 및 비식별화 기준 확정.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">진행 중 이슈</div>
+      <div class="issue-list">
+        <div class="issue-item critical">
+          <span class="ii-icon">🔴</span>
+          <div><strong>[긴급] 대시보드 서버 간헐적 응답 지연</strong> — 2/25부터 오전 8~9시 출근 시간대 데이터 갱신 지연 현상 발생(평균 12초 → 45초). 원인 분석 중. 3월 1주차 내 조치 예정.</div>
+        </div>
+        <div class="issue-item">
+          <span class="ii-icon">🟡</span>
+          <div><strong>[주의] 1분기 예측 모델 파일럿 데이터 정제 지연</strong> — 원시 데이터 내 결측값 비율 8.3%로 예상치 초과. 국토연구원과 보정 기준 재협의 중. 착수 일정 2주 순연 가능성.</div>
+        </div>
+        <div class="issue-item">
+          <span class="ii-icon">🔵</span>
+          <div><strong>[검토] 중부선 구간 CCTV 노후화 교체 예산 검토</strong> — 2016년 설치 장비 17기 내구연한 초과. 3월 예산 계획서 제출을 위한 견적 산정 진행 중.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">다음 달 계획 (3월)</div>
+      <div class="plan-grid">
+        <div class="plan-item">
+          <div class="plan-date">3월 1주 (3/2~7)</div>
+          <div class="plan-text">대시보드 응답 지연 원인 파악 및 긴급 패치 적용</div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-date">3월 2주 (3/10~14)</div>
+          <div class="plan-text">교통량 예측 모델 데이터 정제 완료 및 파일럿 착수</div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-date">3월 3주 (3/17~21)</div>
+          <div class="plan-text">중부선 CCTV 교체 예산 계획서 제출</div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-date">3월 4주 (3/24~28)</div>
+          <div class="plan-text">1분기 업무 실적 취합 및 2분기 계획 초안 수립</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rpt-footer">
+      <div>교통인프라본부 스마트도로팀 · 내선 1234 · smartroad@ex.co.kr</div>
+      <div class="sign-row">
+        <div class="sign-box"><div class="sign-lbl">작성</div><div class="sign-line"></div></div>
+        <div class="sign-box"><div class="sign-lbl">검토</div><div class="sign-line"></div></div>
+        <div class="sign-box"><div class="sign-lbl">결재</div><div class="sign-line"></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     3월
+══════════════════════════════════ -->
+<div class="page" id="mar">
+  <div class="report-wrap">
+
+    <div class="rpt-header">
+      <div class="rh-left">
+        <div class="rh-org">교통인프라본부 · 스마트도로팀</div>
+        <div class="rh-title">3월 업무 보고서</div>
+        <div class="rh-sub">Monthly Work Report — March 2026</div>
+      </div>
+      <div class="rh-right">
+        <div>보고일 <strong>2026. 03. 31.</strong></div>
+        <div>작성자 <strong>스마트도로팀</strong></div>
+        <div>문서번호 <strong>2026-SRT-03</strong></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">이번 달 주요 업무</div>
+      <div class="task-list">
+        <div class="task-item">
+          <div class="task-num">1</div>
+          <div class="task-content">
+            <div class="task-name">대시보드 응답 지연 패치 및 성능 개선 <span class="badge done">완료</span></div>
+            <div class="task-desc">2월 말 발생한 출근 시간대 응답 지연 원인(캐시 만료 충돌) 확인. 렌더링 로직 최적화 및 데이터 갱신 주기 조정 적용(3/5). 평균 응답시간 45초 → 9초로 개선 완료.</div>
+          </div>
+        </div>
+        <div class="task-item">
+          <div class="task-num">2</div>
+          <div class="task-content">
+            <div class="task-name">교통량 예측 모델 파일럿 1차 테스트 완료 <span class="badge done">완료</span></div>
+            <div class="task-desc">국토연구원 공동 개발 1분기 파일럿 1차 테스트 완료(3/21). 경부선·서해안선 2개 노선 대상, 시간대별 교통량 예측 정확도 MAE 기준 82.4% 달성. 2차 보완 일정 4월로 확정.</div>
+          </div>
+        </div>
+        <div class="task-item">
+          <div class="task-num">3</div>
+          <div class="task-content">
+            <div class="task-name">1분기 업무 실적 취합 및 2분기 계획 수립 <span class="badge prog">진행중</span></div>
+            <div class="task-desc">1~3월 주요 업무 실적 취합 및 KPI 달성률 분석 진행 중. 센서 정비율 98.2%, 데이터 수집 안정화율 96.7% 달성. 2분기 계획 초안 작성 완료, 본부 검토 대기 중.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">진행 중 이슈</div>
+      <div class="issue-list">
+        <div class="issue-item critical">
+          <span class="ii-icon">🔴</span>
+          <div><strong>[긴급] 중부선 CCTV 노후 장비 오작동 빈도 증가</strong> — 3월 중 영상 끊김 신고 14건 접수(전월 대비 2.3배). 예산 계획서 제출 완료했으나 승인 전 임시 조치 필요. 이동식 카메라 임시 배치 검토 중.</div>
+        </div>
+        <div class="issue-item">
+          <span class="ii-icon">🟡</span>
+          <div><strong>[주의] 예측 모델 특정 시간대 오차 과다</strong> — 오전 7~8시 첨두 시간대 예측 오차율 18% 수준으로 목표치(10%) 초과. 4월 2차 테스트에서 첨두 시간대 가중치 조정 예정.</div>
+        </div>
+        <div class="issue-item">
+          <span class="ii-icon">🔵</span>
+          <div><strong>[검토] 봄철 공사 시즌 교통 통제 구간 사전 공지 체계 정비</strong> — 4~5월 도로 보수공사 15개소 예정. 대시보드 내 공사 구간 표시 기능 추가 여부 검토 중.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">다음 달 계획 (4월)</div>
+      <div class="plan-grid">
+        <div class="plan-item">
+          <div class="plan-date">4월 1주 (4/1~4)</div>
+          <div class="plan-text">중부선 CCTV 이동식 카메라 임시 배치 및 모니터링 강화</div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-date">4월 2주 (4/7~11)</div>
+          <div class="plan-text">교통량 예측 모델 2차 테스트 — 첨두 시간대 오차 개선</div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-date">4월 3주 (4/14~18)</div>
+          <div class="plan-text">대시보드 공사 구간 표시 기능 기획 및 개발 착수</div>
+        </div>
+        <div class="plan-item">
+          <div class="plan-date">4월 4주 (4/21~25)</div>
+          <div class="plan-text">2분기 계획 본부 보고 및 중부선 CCTV 교체 예산 승인 추진</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rpt-footer">
+      <div>교통인프라본부 스마트도로팀 · 내선 1234 · smartroad@ex.co.kr</div>
+      <div class="sign-row">
+        <div class="sign-box"><div class="sign-lbl">작성</div><div class="sign-line"></div></div>
+        <div class="sign-box"><div class="sign-lbl">검토</div><div class="sign-line"></div></div>
+        <div class="sign-box"><div class="sign-lbl">결재</div><div class="sign-line"></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로또 번호 생성기</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, #f7c948, #f4813f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -1px;
+    }
+
+    .subtitle {
+      color: #aab;
+      font-size: 0.95rem;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      padding: 40px 48px;
+      width: 100%;
+      max-width: 600px;
+      backdrop-filter: blur(12px);
+    }
+
+    .round-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .count-label {
+      font-size: 0.85rem;
+      color: #aab;
+    }
+
+    .count-control {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .count-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      line-height: 1;
+    }
+
+    .count-btn:hover { background: rgba(255,255,255,0.18); }
+
+    .count-val {
+      font-size: 1.1rem;
+      font-weight: 700;
+      min-width: 24px;
+      text-align: center;
+    }
+
+    .sets-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 80px;
+    }
+
+    .set-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+
+    .set-label {
+      font-size: 0.78rem;
+      color: #aab;
+      width: 24px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .balls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ball {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 -3px 6px rgba(0,0,0,0.2);
+      animation: ballDrop 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+      color: #fff;
+    }
+
+    .ball:nth-child(1) { animation-delay: 0.05s; }
+    .ball:nth-child(2) { animation-delay: 0.10s; }
+    .ball:nth-child(3) { animation-delay: 0.15s; }
+    .ball:nth-child(4) { animation-delay: 0.20s; }
+    .ball:nth-child(5) { animation-delay: 0.25s; }
+    .ball:nth-child(6) { animation-delay: 0.30s; }
+
+    /* 번호대별 색상 (1-45) */
+    .ball.c1  { background: linear-gradient(135deg, #f7d94c, #e8b800); color: #333; }
+    .ball.c2  { background: linear-gradient(135deg, #5bb8f5, #1a8ad4); }
+    .ball.c3  { background: linear-gradient(135deg, #f47b7b, #d93636); }
+    .ball.c4  { background: linear-gradient(135deg, #a0a0a0, #555); }
+    .ball.c5  { background: linear-gradient(135deg, #5fd68a, #1ea64e); }
+
+    .plus-ball {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border: 2px dashed rgba(255,255,255,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: rgba(255,255,255,0.4);
+      cursor: pointer;
+      margin-left: 4px;
+    }
+
+    .divider {
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      margin: 28px 0;
+    }
+
+    .btn-generate {
+      width: 100%;
+      padding: 16px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(90deg, #f7c948, #f4813f);
+      color: #1a1a2e;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 6px 20px rgba(247,201,72,0.35);
+    }
+
+    .btn-generate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(247,201,72,0.45);
+    }
+
+    .btn-generate:active { transform: translateY(0); }
+
+    .btn-generate.spinning .btn-text { display: none; }
+    .btn-generate .spinner { display: none; }
+    .btn-generate.spinning .spinner { display: inline-block; }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(26,26,46,0.3);
+      border-top-color: #1a1a2e;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin: 0 auto;
+    }
+
+    .footer-note {
+      margin-top: 24px;
+      font-size: 0.78rem;
+      color: #667;
+      text-align: center;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes ballDrop {
+      from { opacity: 0; transform: scale(0) rotate(-30deg); }
+      to   { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+<h1>🍀 로또 번호 생성기</h1>
+<p class="subtitle">행운의 번호를 뽑아보세요 (1 ~ 45)</p>
+
+<div class="card">
+  <div class="round-info">
+    <span class="count-label">게임 수</span>
+    <div class="count-control">
+      <button class="count-btn" id="btnMinus">−</button>
+      <span class="count-val" id="countVal">5</span>
+      <button class="count-btn" id="btnPlus">+</button>
+    </div>
+  </div>
+
+  <div class="sets-container" id="setsContainer">
+    <p style="color:#667; font-size:0.9rem; text-align:center; padding: 20px 0;">
+      버튼을 눌러 번호를 생성하세요
+    </p>
+  </div>
+
+  <div class="divider"></div>
+
+  <button class="btn-generate" id="btnGenerate">
+    <span class="btn-text">번호 생성하기</span>
+    <span class="spinner"></span>
+  </button>
+</div>
+
+<p class="footer-note">이 번호는 무작위로 생성됩니다. 당첨을 보장하지 않습니다.</p>
+
+<script>
+  let gameCount = 5;
+  const MIN = 1, MAX = 5;
+
+  const countVal = document.getElementById('countVal');
+  const btnMinus = document.getElementById('btnMinus');
+  const btnPlus  = document.getElementById('btnPlus');
+  const btnGen   = document.getElementById('btnGenerate');
+  const container = document.getElementById('setsContainer');
+
+  btnMinus.addEventListener('click', () => {
+    if (gameCount > MIN) { gameCount--; countVal.textContent = gameCount; }
+  });
+
+  btnPlus.addEventListener('click', () => {
+    if (gameCount < MAX) { gameCount++; countVal.textContent = gameCount; }
+  });
+
+  function ballClass(n) {
+    if (n <= 10) return 'c1';
+    if (n <= 20) return 'c2';
+    if (n <= 30) return 'c3';
+    if (n <= 40) return 'c4';
+    return 'c5';
+  }
+
+  function pickNumbers() {
+    const pool = Array.from({length: 45}, (_, i) => i + 1);
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    return pool.slice(0, 6).sort((a, b) => a - b);
+  }
+
+  function renderSets(sets) {
+    container.innerHTML = '';
+    const labels = ['A', 'B', 'C', 'D', 'E'];
+    sets.forEach((nums, idx) => {
+      const row = document.createElement('div');
+      row.className = 'set-row';
+      row.style.animationDelay = `${idx * 0.06}s`;
+
+      const label = document.createElement('span');
+      label.className = 'set-label';
+      label.textContent = labels[idx];
+
+      const balls = document.createElement('div');
+      balls.className = 'balls';
+
+      nums.forEach(n => {
+        const b = document.createElement('div');
+        b.className = `ball ${ballClass(n)}`;
+        b.textContent = n;
+        balls.appendChild(b);
+      });
+
+      row.appendChild(label);
+      row.appendChild(balls);
+      container.appendChild(row);
+    });
+  }
+
+  btnGen.addEventListener('click', () => {
+    btnGen.classList.add('spinning');
+    btnGen.disabled = true;
+
+    setTimeout(() => {
+      const sets = Array.from({length: gameCount}, pickNumbers);
+      renderSets(sets);
+      btnGen.classList.remove('spinning');
+      btnGen.disabled = false;
+    }, 400);
+  });
+</script>
+</body>
+</html>

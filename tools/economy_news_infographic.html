@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026년 5월 경제뉴스 인포그래픽</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0d1117;
+      color: #e6edf3;
+      font-family: 'Malgun Gothic', 'Segoe UI', sans-serif;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0a2a5e 0%, #1a4fa8 50%, #0a2a5e 100%);
+      padding: 48px 40px 40px;
+      text-align: center;
+      border-bottom: 1px solid #21262d;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.2) 0%, transparent 70%);
+    }
+
+    .header-label {
+      font-size: 12px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #58a6ff;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #fff;
+      position: relative;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      font-size: 14px;
+      color: #8b949e;
+      position: relative;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .card {
+      background: #161b22;
+      border: 2px solid #30363d;
+      border-radius: 16px;
+      display: flex;
+      align-items: stretch;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s, border-color 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      background: rgba(239, 68, 68, 0.08);
+      border-color: rgba(239, 68, 68, 0.45);
+      box-shadow: 0 12px 40px rgba(239, 68, 68, 0.15);
+    }
+
+    .card-accent {
+      width: 6px;
+      flex-shrink: 0;
+    }
+
+    .card-number-wrap {
+      width: 130px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 12px;
+    }
+
+    .card-number {
+      font-size: 80px;
+      font-weight: 900;
+      line-height: 1;
+      opacity: 0.18;
+      letter-spacing: -4px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .card-body {
+      flex: 1;
+      padding: 28px 28px 28px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      width: fit-content;
+    }
+
+    .card-title {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.35;
+      color: #e6edf3;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: #8b949e;
+      line-height: 1.7;
+    }
+
+    .card-meta {
+      font-size: 12px;
+      color: #484f58;
+      margin-top: 4px;
+    }
+
+    /* 카드별 색상 */
+    .c1 .card-accent { background: #22c55e; }
+    .c1 .card-number { color: #22c55e; }
+    .c1 .card-tag { background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+
+    .c2 .card-accent { background: #3b82f6; }
+    .c2 .card-number { color: #3b82f6; }
+    .c2 .card-tag { background: rgba(59,130,246,0.12); color: #58a6ff; border: 1px solid rgba(59,130,246,0.25); }
+
+    .c3 .card-accent { background: #f97316; }
+    .c3 .card-number { color: #f97316; }
+    .c3 .card-tag { background: rgba(249,115,22,0.12); color: #f97316; border: 1px solid rgba(249,115,22,0.25); }
+
+    .c4 .card-accent { background: #ef4444; }
+    .c4 .card-number { color: #ef4444; }
+    .c4 .card-tag { background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
+
+    .c5 .card-accent { background: #a855f7; }
+    .c5 .card-number { color: #a855f7; }
+    .c5 .card-tag { background: rgba(168,85,247,0.12); color: #a855f7; border: 1px solid rgba(168,85,247,0.25); }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 12px;
+      color: #484f58;
+      border-top: 1px solid #21262d;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-label">Economic News Brief</div>
+  <h1>2026년 5월 경제뉴스 TOP 5</h1>
+  <p>2026년 5월 11일 기준 주요 경제 이슈</p>
+</header>
+
+<div class="container">
+
+  <!-- 01 -->
+  <div class="card c1">
+    <div class="card-accent"></div>
+    <div class="card-number-wrap">
+      <span class="card-number">01</span>
+    </div>
+    <div class="card-body">
+      <span class="card-tag">📈 증시</span>
+      <div class="card-title">코스피, 사상 첫 7,000선 돌파</div>
+      <div class="card-desc">코스피 지수가 사상 처음으로 7,000선을 돌파했습니다. 삼성전자·SK하이닉스 등 반도체 대형주가 상승을 견인하며 메모리 반도체 산업이 경기순환형에서 구조적 성장 단계로 진입했다는 분석이 나옵니다.</div>
+      <div class="card-meta">2026.05.06 · 출처: 오늘의 클릭</div>
+    </div>
+  </div>
+
+  <!-- 02 -->
+  <div class="card c2">
+    <div class="card-accent"></div>
+    <div class="card-number-wrap">
+      <span class="card-number">02</span>
+    </div>
+    <div class="card-body">
+      <span class="card-tag">🤖 산업·AI</span>
+      <div class="card-title">AI·반도체 증시 강세 지속</div>
+      <div class="card-desc">글로벌 AI 수요 증가에 따라 반도체 관련 종목의 강세가 이어지고 있습니다. 국내외 증시에서 AI 관련주가 주도주로 부상하며, 엔비디아·TSMC 등 글로벌 공급망 전반에 투자 자금이 집중되고 있습니다.</div>
+      <div class="card-meta">2026.05.09 · 출처: 오늘의 클릭</div>
+    </div>
+  </div>
+
+  <!-- 03 -->
+  <div class="card c3">
+    <div class="card-accent"></div>
+    <div class="card-number-wrap">
+      <span class="card-number">03</span>
+    </div>
+    <div class="card-body">
+      <span class="card-tag">🏦 금리</span>
+      <div class="card-title">미국 연준, 금리 동결 유지…9월 인하도 불투명</div>
+      <div class="card-desc">Fed(미국 연준)가 기준금리를 동결 유지하고 있으며, 9월 인하 지연 및 인상 전환 가능성도 거론됩니다. 중동 지정학적 리스크와 지속되는 물가 불확실성이 금리 결정의 핵심 변수로 작용하고 있습니다.</div>
+      <div class="card-meta">2026.05.11 · 출처: 21세기 이슈</div>
+    </div>
+  </div>
+
+  <!-- 04 -->
+  <div class="card c4">
+    <div class="card-accent"></div>
+    <div class="card-number-wrap">
+      <span class="card-number">04</span>
+    </div>
+    <div class="card-body">
+      <span class="card-tag">💱 환율</span>
+      <div class="card-title">원/달러 1,400원대 고환율 장기화</div>
+      <div class="card-desc">원화 환율이 1,400원 수준을 유지하는 '고환율 사태'가 장기화되고 있습니다. 전문가들은 올해 평균 환율이 1,400원을 넘길 것으로 전망하며, 수입 물가 상승과 소비 위축 우려가 커지고 있습니다.</div>
+      <div class="card-meta">2026.05.11 · 출처: newneek</div>
+    </div>
+  </div>
+
+  <!-- 05 -->
+  <div class="card c5">
+    <div class="card-accent"></div>
+    <div class="card-number-wrap">
+      <span class="card-number">05</span>
+    </div>
+    <div class="card-body">
+      <span class="card-tag">🌍 국제</span>
+      <div class="card-title">러-우 휴전 합의, 글로벌 경제 회복 기대감</div>
+      <div class="card-desc">러시아-우크라이나 휴전 합의 논의가 진전되며 에너지 가격 안정 기대감이 높아지고 있습니다. 글로벌 공급망 회복에 긍정적 영향을 줄 것으로 분석되며, 유럽 증시와 에너지 관련 선물 시장도 민감하게 반응하고 있습니다.</div>
+      <div class="card-meta">2026.05.09 · 출처: 오늘의 클릭</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  데이터 기준: 2026년 5월 11일 &nbsp;|&nbsp; 출처: 오늘의 클릭, 21세기 이슈, newneek
+</footer>
+
+</body>
+</html>

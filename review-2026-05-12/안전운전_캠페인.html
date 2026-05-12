@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>안전운전 캠페인 2026 | 한국도로공사</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+    :root {
+      --green:   #0057b8;
+      --green-d: #003d82;
+      --green-l: #e8f1fc;
+      --navy:    #0b1f3a;
+      --navy-m:  #0e2d6b;
+      --orange:  #f47920;
+      --orange-d:#c75500;
+      --white:   #ffffff;
+      --gray:    #f4f6f8;
+      --text:    #1a2535;
+      --muted:   #6b7a8d;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── 상단 로고바 ── */
+    .topbar {
+      background: var(--navy);
+      padding: 12px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .topbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      background: var(--orange);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -1px;
+    }
+    .logo-text {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.4;
+    }
+    .logo-text span {
+      display: block;
+      font-size: 10px;
+      color: rgba(255,255,255,0.45);
+      font-weight: 300;
+      letter-spacing: 1px;
+    }
+    .topbar-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+    }
+    .topbar-year {
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 1px;
+    }
+    .topbar-date {
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── 부서 로고 ── */
+    .dept-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 7px 14px 7px 8px;
+    }
+    .dept-logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #0057b8 0%, #003d82 100%);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.5px;
+      flex-shrink: 0;
+    }
+    .dept-logo-text {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.45;
+      white-space: nowrap;
+    }
+    .dept-logo-text span {
+      display: block;
+      font-size: 9.5px;
+      color: rgba(255,255,255,0.38);
+      font-weight: 300;
+      letter-spacing: 0.5px;
+    }
+    @media (max-width: 700px) {
+      .dept-logo { display: none; }
+    }
+
+    /* ── 히어로 ── */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-m) 55%, #7a2800 100%);
+      padding: 90px 40px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px,
+          transparent 1px, transparent 80px
+        );
+    }
+    /* 도로 라인 장식 */
+    .road-line {
+      position: absolute;
+      bottom: 0;
+      left: 0; right: 0;
+      height: 6px;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--orange) 0px, var(--orange) 60px,
+        transparent 60px, transparent 90px
+      );
+      opacity: 0.7;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(244,121,32,0.18);
+      border: 1px solid rgba(244,121,32,0.4);
+      color: #ffb366;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      padding: 5px 16px;
+      border-radius: 999px;
+      margin-bottom: 28px;
+      text-transform: uppercase;
+    }
+    .hero-slogan {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.25;
+      letter-spacing: -1.5px;
+      margin-bottom: 10px;
+    }
+    .hero-slogan .accent {
+      color: var(--orange);
+      position: relative;
+    }
+    .hero-slogan .accent::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: -4px; right: 0;
+      height: 3px;
+      background: var(--orange);
+      border-radius: 2px;
+      opacity: 0.5;
+    }
+    .hero-sub {
+      font-size: 15px;
+      color: rgba(255,255,255,0.55);
+      font-weight: 300;
+      margin-top: 18px;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── 핵심 메시지 ── */
+    .messages {
+      background: var(--gray);
+      padding: 70px 40px;
+    }
+    .section-label {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--green-d);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
+    .section-dept {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--orange);
+      background: #fff3e8;
+      border: 1px solid #ffd5a8;
+      display: inline-block;
+      padding: 3px 14px;
+      border-radius: 999px;
+      margin: 0 auto 36px;
+      display: flex;
+      justify-content: center;
+    }
+    .section-dept span {
+      display: inline-block;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 36px 28px 32px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      border: 1px solid #e8ecf0;
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+    }
+    .card:nth-child(1)::before { background: #0057b8; }
+    .card:nth-child(2)::before { background: #f47920; }
+    .card:nth-child(3)::before { background: #0057b8; }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(0,0,0,0.1); }
+
+    .card-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .card:nth-child(1) .card-icon { background: #e8f1fc; }
+    .card:nth-child(2) .card-icon { background: #fff3e8; }
+    .card:nth-child(3) .card-icon { background: #e8f1fc; }
+
+    .card-num {
+      position: absolute;
+      top: 20px; right: 24px;
+      font-size: 42px;
+      font-weight: 900;
+      color: #f0f2f5;
+      line-height: 1;
+      letter-spacing: -2px;
+      user-select: none;
+    }
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+      letter-spacing: -0.3px;
+    }
+    .card-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+    .card-badge {
+      display: inline-block;
+      margin-top: 16px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+    .card:nth-child(1) .card-badge { background: #e8f1fc; color: #003d82; }
+    .card:nth-child(2) .card-badge { background: #fff3e8; color: #c75500; }
+    .card:nth-child(3) .card-badge { background: #e8f1fc; color: #003d82; }
+
+    /* ── 캠페인 기간 배너 ── */
+    .period {
+      background: var(--navy);
+      padding: 56px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .period::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, rgba(0,87,184,0.15) 0%, transparent 70%);
+    }
+    .period::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: -80px;
+      width: 240px; height: 240px;
+      background: radial-gradient(circle, rgba(0,112,192,0.1) 0%, transparent 70%);
+    }
+    .period-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      color: var(--orange);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .period-dates {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+    }
+    .period-dates .sep {
+      color: var(--orange);
+      margin: 0 14px;
+      font-weight: 300;
+    }
+    .period-note {
+      font-size: 13.5px;
+      color: rgba(255,255,255,0.45);
+      font-weight: 300;
+      margin-top: 6px;
+    }
+    .period-chips {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.13);
+      color: rgba(255,255,255,0.7);
+      font-size: 12px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-weight: 400;
+    }
+
+    /* ── QR 섹션 ── */
+    .qr-section {
+      background: #fff;
+      padding: 70px 40px;
+      text-align: center;
+    }
+    .qr-inner {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .qr-box {
+      width: 160px;
+      height: 160px;
+      margin: 0 auto 28px;
+      border: 2px dashed #c8d0d9;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #b0bac6;
+      background: #f9fafb;
+      position: relative;
+    }
+    /* QR 패턴 꾸미기 */
+    .qr-box::before {
+      content: '';
+      position: absolute;
+      top: 10px; left: 10px;
+      width: 28px; height: 28px;
+      border-top: 3px solid #c8d0d9;
+      border-left: 3px solid #c8d0d9;
+      border-radius: 3px 0 0 0;
+    }
+    .qr-box::after {
+      content: '';
+      position: absolute;
+      bottom: 10px; right: 10px;
+      width: 28px; height: 28px;
+      border-bottom: 3px solid #c8d0d9;
+      border-right: 3px solid #c8d0d9;
+      border-radius: 0 0 3px 0;
+    }
+    .qr-icon { font-size: 36px; }
+    .qr-placeholder { font-size: 11px; color: #adb5bd; font-weight: 500; }
+
+    .qr-inner .qr-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+    .qr-inner .qr-desc {
+      font-size: 13.5px;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 24px;
+    }
+    .qr-btn {
+      display: inline-block;
+      background: var(--orange);
+      color: #fff;
+      font-size: 13.5px;
+      font-weight: 600;
+      padding: 13px 32px;
+      border-radius: 999px;
+      text-decoration: none;
+      letter-spacing: 0.3px;
+      box-shadow: 0 4px 16px rgba(244,121,32,0.35);
+      transition: background 0.2s, transform 0.15s;
+      cursor: pointer;
+      border: none;
+    }
+    .qr-btn:hover { background: var(--orange-d); transform: translateY(-1px); }
+
+    /* ── 푸터 ── */
+    footer {
+      background: #0b1f3a;
+      padding: 28px 40px;
+      text-align: center;
+      font-size: 11.5px;
+      color: rgba(255,255,255,0.3);
+      line-height: 1.9;
+    }
+    footer strong { color: rgba(255,255,255,0.55); font-weight: 500; }
+
+    /* ── 참여 인증 버튼 ── */
+    .cert-btn {
+      display: inline-block;
+      background: transparent;
+      color: var(--green);
+      font-size: 13.5px;
+      font-weight: 600;
+      padding: 12px 28px;
+      border-radius: 999px;
+      border: 2px solid var(--green);
+      cursor: pointer;
+      font-family: inherit;
+      letter-spacing: 0.3px;
+      transition: background 0.2s, color 0.2s, transform 0.15s;
+      margin-top: 12px;
+    }
+    .cert-btn:hover { background: var(--green); color: #fff; transform: translateY(-1px); }
+
+    /* ── 참여 인증 모달 ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 31, 58, 0.78);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-box {
+      background: #fff;
+      border-radius: 20px;
+      padding: 40px 36px 36px;
+      max-width: 420px;
+      width: 100%;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      transform: translateY(16px) scale(0.97);
+      transition: transform 0.25s;
+    }
+    .modal-overlay.open .modal-box {
+      transform: translateY(0) scale(1);
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 18px;
+      background: none;
+      border: none;
+      font-size: 22px;
+      color: #adb5bd;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px;
+    }
+    .modal-close:hover { color: var(--navy); }
+    .cert-step { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .modal-icon { font-size: 40px; margin-bottom: 12px; }
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .modal-desc {
+      font-size: 13.5px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 22px;
+    }
+    .cert-input {
+      width: 100%;
+      border: 1.5px solid #dde2e8;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--text);
+      outline: none;
+      margin-bottom: 14px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .cert-input:focus { border-color: var(--green); }
+    .cert-input.error { border-color: #ef4444; }
+    .cert-submit-btn {
+      width: 100%;
+      background: var(--green);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 13px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .cert-submit-btn:hover { background: var(--green-d); transform: translateY(-1px); }
+
+    /* 인증서 카드 */
+    .cert-card {
+      width: 100%;
+      border: 2px solid #dde2e8;
+      border-radius: 14px;
+      padding: 28px 24px 20px;
+      position: relative;
+      overflow: hidden;
+      background: #fff;
+      text-align: center;
+    }
+    .cert-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--green) 0%, var(--orange) 100%);
+    }
+    .cert-header { margin-bottom: 18px; }
+    .cert-logo-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .cert-logo-mark {
+      width: 28px; height: 28px;
+      background: var(--orange);
+      border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 900; color: #fff;
+    }
+    .cert-logo-text { font-size: 12px; font-weight: 600; color: var(--navy); }
+    .cert-subtitle { font-size: 10px; letter-spacing: 2px; color: var(--muted); margin-bottom: 4px; }
+    .cert-main-title { font-size: 18px; font-weight: 900; color: var(--navy); line-height: 1.35; letter-spacing: -0.5px; }
+    .cert-body { border-top: 1px dashed #dde2e8; padding-top: 18px; }
+    .cert-name-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+    .cert-name { font-size: 22px; font-weight: 900; color: var(--navy); margin-bottom: 12px; }
+    .cert-pledge-text { font-size: 12px; color: var(--muted); line-height: 1.7; margin-bottom: 14px; }
+    .cert-items { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
+    .cert-item { font-size: 12.5px; font-weight: 600; color: var(--green); }
+    .cert-date { font-size: 11px; color: var(--muted); margin-top: 8px; }
+    .cert-stamp {
+      position: absolute;
+      bottom: 24px; right: 20px;
+      width: 62px; height: 62px;
+      border: 3px solid rgba(0,87,184,0.35);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 900;
+      color: rgba(0,87,184,0.4);
+      transform: rotate(-18deg);
+      pointer-events: none;
+      letter-spacing: 1px;
+    }
+    .cert-issuer {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 12px;
+      letter-spacing: 0.3px;
+    }
+    .cert-print-btn {
+      margin-top: 16px;
+      background: none;
+      border: 1.5px solid var(--green);
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 24px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s, color 0.2s;
+    }
+    .cert-print-btn:hover { background: var(--green); color: #fff; }
+
+    /* 인쇄 */
+    @media print {
+      .no-print { display: none !important; }
+      body > *:not(#cert-modal) { display: none !important; }
+      .modal-overlay { position: relative !important; background: none !important; backdrop-filter: none !important; opacity: 1 !important; pointer-events: auto !important; }
+      .modal-box { box-shadow: none !important; transform: none !important; }
+    }
+
+    /* ── 반응형 ── */
+    @media (max-width: 700px) {
+      .topbar { padding: 10px 20px; }
+      .hero { padding: 60px 24px 56px; }
+      .messages { padding: 50px 20px; }
+      .cards { grid-template-columns: 1fr; }
+      .period { padding: 44px 24px; }
+      .qr-section { padding: 50px 20px; }
+      footer { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- 로고바 -->
+<nav class="topbar">
+  <div class="topbar-logo">
+    <div class="logo-mark">도</div>
+    <div class="logo-text">
+      한국도로공사
+      <span>Korea Expressway Corporation</span>
+    </div>
+  </div>
+  <div class="dept-logo">
+    <div class="dept-logo-icon">AI</div>
+    <div class="dept-logo-text">
+      AI 데이터처
+      <span>주관 부서 로고</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-date" id="today-date"></div>
+    <div class="topbar-year">SAFETY CAMPAIGN 2026</div>
+  </div>
+  <script>
+    const d = new Date();
+    document.getElementById('today-date').textContent =
+      d.getFullYear() + '. ' +
+      String(d.getMonth() + 1).padStart(2, '0') + '. ' +
+      String(d.getDate()).padStart(2, '0') + '.';
+  </script>
+</nav>
+
+<!-- 히어로 -->
+<section class="hero">
+  <div class="hero-tag">사내 안전운전 캠페인</div>
+  <div class="hero-slogan">
+    속도보다 소중한 건<br>
+    <span class="accent">당신의 하루</span>입니다
+  </div>
+  <p class="hero-sub">모든 도로 위에서, 안전이 먼저입니다 · Drive Safe, Arrive Safe</p>
+  <div class="road-line"></div>
+</section>
+
+<!-- 핵심 메시지 -->
+<section class="messages">
+  <div class="section-label">Core Messages</div>
+  <div class="section-title">안전운전 3대 핵심 실천</div>
+  <div class="section-dept">주관 · AI 데이터처</div>
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-num">01</div>
+      <div class="card-icon">🚗</div>
+      <div class="card-title">규정 속도 준수</div>
+      <div class="card-desc">
+        제한속도 10km/h 초과 시 사고 위험은 2배 이상 증가합니다. 빠른 도착보다 안전한 귀가가 우선입니다.
+      </div>
+      <span class="card-badge">속도 관리</span>
+    </div>
+
+    <div class="card">
+      <div class="card-num">02</div>
+      <div class="card-icon">📵</div>
+      <div class="card-title">운전 중 휴대폰 금지</div>
+      <div class="card-desc">
+        주행 중 스마트폰 사용은 음주운전과 동일한 반응 속도 저하를 유발합니다. 급한 연락은 안전한 곳에 정차 후.
+      </div>
+      <span class="card-badge">집중 운전</span>
+    </div>
+
+    <div class="card">
+      <div class="card-num">03</div>
+      <div class="card-icon">😴</div>
+      <div class="card-title">졸음운전 즉시 대응</div>
+      <div class="card-desc">
+        졸음이 오면 즉시 졸음쉼터·휴게소를 이용하세요. 20분 수면이 다음 목적지까지의 생명을 지킵니다.
+      </div>
+      <span class="card-badge">피로 관리</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- 캠페인 기간 -->
+<section class="period">
+  <div class="period-label">Campaign Period</div>
+  <div class="period-dates">
+    2026. 06. 01
+    <span class="sep">—</span>
+    2026. 08. 31
+  </div>
+  <p class="period-note">전국 한국도로공사 전 사업소 및 현장 직원 대상 · 총 92일간</p>
+  <div class="period-chips">
+    <span class="chip">전 직원 참여</span>
+    <span class="chip">현장 교육 병행</span>
+    <span class="chip">우수 실천자 포상</span>
+    <span class="chip">온라인 서약 참여 가능</span>
+  </div>
+</section>
+
+<!-- QR 코드 -->
+<section class="qr-section">
+  <div class="qr-inner">
+    <div class="qr-box">
+      <span class="qr-icon">⬛</span>
+      <span class="qr-placeholder">QR 코드 삽입</span>
+    </div>
+    <div class="qr-title">안전운전 서약 & 이벤트 참여</div>
+    <div class="qr-desc">
+      QR코드를 스캔하거나 아래 버튼을 클릭해<br>
+      안전운전 서약에 참여하세요.<br>
+      추첨을 통해 소정의 선물을 드립니다.
+    </div>
+    <button class="qr-btn">온라인 서약 참여하기</button>
+    <br>
+    <button class="cert-btn" onclick="openCertModal()">캠페인 참여 인증하기</button>
+    <div style="margin-top:18px;">
+      <a href="캠페인_참여자명단.html" style="font-size:12.5px;color:var(--muted);text-decoration:none;border-bottom:1px dashed #c8d0d9;padding-bottom:1px;">참여자 명단 보기 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- 캠페인 참여 인증 모달 -->
+<div id="cert-modal" class="modal-overlay" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+
+    <!-- Step 1: 이름 입력 -->
+    <div id="cert-step-input" class="cert-step">
+      <button class="modal-close no-print" onclick="closeCertModal()" aria-label="닫기">×</button>
+      <div class="modal-icon">🏅</div>
+      <h2 id="modal-title" class="modal-title">캠페인 참여 인증</h2>
+      <p class="modal-desc">이름 또는 사번을 입력하면<br>참여 인증서를 즉시 발급해 드립니다.</p>
+      <input id="cert-name" class="cert-input" type="text" placeholder="홍길동 / 20001234" maxlength="20" />
+      <button class="cert-submit-btn" onclick="generateCert()">인증서 발급하기</button>
+    </div>
+
+    <!-- Step 2: 인증서 -->
+    <div id="cert-step-cert" class="cert-step" style="display:none;">
+      <button class="modal-close no-print" onclick="closeCertModal()" aria-label="닫기">×</button>
+      <div class="cert-card">
+        <div class="cert-header">
+          <div class="cert-logo-row">
+            <div class="cert-logo-mark">도</div>
+            <span class="cert-logo-text">한국도로공사</span>
+          </div>
+          <div class="cert-subtitle">SAFETY CAMPAIGN 2026</div>
+          <div class="cert-main-title">안전운전 캠페인<br>참여 인증서</div>
+        </div>
+        <div class="cert-body">
+          <div class="cert-name-label">위 직원은</div>
+          <div class="cert-name" id="cert-display-name"></div>
+          <div class="cert-pledge-text">
+            2026 사내 안전운전 캠페인에 참여하여<br>
+            아래 3대 안전 실천을 서약하였음을 인증합니다.
+          </div>
+          <div class="cert-items">
+            <div class="cert-item">✔ 규정 속도 준수</div>
+            <div class="cert-item">✔ 운전 중 휴대폰 금지</div>
+            <div class="cert-item">✔ 졸음운전 즉시 대응</div>
+          </div>
+          <div class="cert-date" id="cert-display-date"></div>
+        </div>
+        <div class="cert-stamp">인증</div>
+        <div class="cert-issuer">한국도로공사 AI 데이터처</div>
+      </div>
+      <button class="cert-print-btn no-print" onclick="window.print()">🖨 인증서 인쇄</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function openCertModal() {
+    const modal = document.getElementById('cert-modal');
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.getElementById('cert-step-input').style.display = 'flex';
+    document.getElementById('cert-step-cert').style.display = 'none';
+    const input = document.getElementById('cert-name');
+    input.value = '';
+    input.classList.remove('error');
+    setTimeout(() => input.focus(), 50);
+  }
+
+  function closeCertModal() {
+    const modal = document.getElementById('cert-modal');
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  function generateCert() {
+    const input = document.getElementById('cert-name');
+    const name = input.value.trim();
+    if (!name) {
+      input.classList.add('error');
+      input.focus();
+      setTimeout(() => input.classList.remove('error'), 1200);
+      return;
+    }
+    document.getElementById('cert-display-name').textContent = name;
+    const d = new Date();
+    const dateStr =
+      d.getFullYear() + '. ' +
+      String(d.getMonth() + 1).padStart(2, '0') + '. ' +
+      String(d.getDate()).padStart(2, '0') + '. 인증';
+    document.getElementById('cert-display-date').textContent = dateStr;
+
+    // localStorage에 참여자 저장
+    const key = 'safeCampaign2026_participants';
+    const list = JSON.parse(localStorage.getItem(key) || '[]');
+    list.push({ name, ts: Date.now() });
+    localStorage.setItem(key, JSON.stringify(list));
+
+    document.getElementById('cert-step-input').style.display = 'none';
+    document.getElementById('cert-step-cert').style.display = 'flex';
+  }
+
+  document.getElementById('cert-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeCertModal();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeCertModal();
+  });
+
+  document.getElementById('cert-name').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') generateCert();
+  });
+</script>
+
+<!-- 푸터 -->
+<footer>
+  <div><strong>한국도로공사 AI모델개발부</strong></div>
+  <div>문의 : 내선 2345 &nbsp;|&nbsp; safedrive@ex.co.kr</div>
+  <div>© 2026 Korea Expressway Corporation. All rights reserved.</div>
+</footer>
+
+</body>
+</html>
