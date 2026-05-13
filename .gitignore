@@ -1,6 +1,15 @@
 .env
 tools/.env
 *.env
+.gemini_key
 node_modules/
 .DS_Store
 Thumbs.db
+
+.vercel
+.claude/
+.playwright-mcp/
+.playwright_session/
+scratch/
+오늘의\ 뉴스/
+이메일_요약_정리.xlsx

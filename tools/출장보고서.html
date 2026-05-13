@@ -1,0 +1,992 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>출장보고서 작성 프로그램</title>
+<style>
+:root {
+  --bg: #f0f2f5;
+  --surface: #ffffff;
+  --surface2: #f3f4f6;
+  --border: #d1d5db;
+  --text: #111827;
+  --muted: #6b7280;
+  --blue: #2563eb;
+  --green: #16a34a;
+  --yellow: #d97706;
+  --red: #dc2626;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Malgun Gothic', 'Segoe UI', sans-serif;
+  font-size: 13px;
+}
+
+.wrapper { display: flex; flex-direction: column; height: 100vh; }
+
+/* ── 상단 바 ── */
+.topbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 48px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+.topbar-left { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+.topbar-left .icon { font-size: 18px; }
+.topbar-left h1 { font-size: 15px; font-weight: 700; color: var(--blue); white-space: nowrap; }
+.topbar-left span { font-size: 11px; color: var(--muted); }
+.topbar-right { display: flex; gap: 6px; align-items: center; }
+
+.btn-gen {
+  background: var(--blue); border: none; border-radius: 7px; color: #fff;
+  cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 700;
+  padding: 7px 18px; transition: opacity .15s; white-space: nowrap;
+}
+.btn-gen:hover { opacity: .85; }
+
+.btn-tool {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 7px;
+  color: var(--text); cursor: pointer; font-family: inherit; font-size: 12px;
+  font-weight: 600; padding: 6px 12px; transition: border-color .15s, color .15s, background .15s;
+  white-space: nowrap;
+}
+.btn-tool:hover { border-color: var(--blue); color: var(--blue); }
+.btn-tool.print { border-color: var(--green); color: var(--green); }
+.btn-tool.print:hover { background: var(--green); color: #fff; }
+
+/* ── 2단 레이아웃 ── */
+.layout {
+  flex: 1; overflow: hidden;
+  display: flex; flex-direction: row;
+  gap: 0; padding: 10px 12px;
+}
+
+/* ── 드래그 구분선 ── */
+.resize-handle {
+  flex: 0 0 6px;
+  background: var(--border);
+  border-radius: 3px;
+  cursor: col-resize;
+  margin: 0 4px;
+  transition: background .15s;
+  position: relative;
+}
+.resize-handle:hover, .resize-handle.dragging { background: var(--blue); }
+.resize-handle::after {
+  content: '⋮';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--muted);
+  font-size: 14px;
+  pointer-events: none;
+}
+
+/* ── 폼 패널 (오른쪽) ── */
+.form-panel {
+  flex: 0 0 380px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  overflow-y: auto; overflow-x: hidden; padding: 12px 14px;
+  min-width: 260px; max-width: 700px;
+}
+.form-panel::-webkit-scrollbar { width: 4px; }
+.form-panel::-webkit-scrollbar-thumb { background: #c1c5cc; border-radius: 4px; }
+
+.sec {
+  font-size: 10px; font-weight: 700; color: var(--yellow);
+  letter-spacing: 1.2px; text-transform: uppercase;
+  margin: 10px 0 6px;
+}
+.sec:first-child { margin-top: 2px; }
+hr.sep { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
+
+.fg { margin-bottom: 8px; }
+.fg label { display: block; font-size: 11px; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
+.fg label .req { color: var(--red); margin-left: 2px; }
+
+input[type="text"], input[type="date"], textarea, select {
+  width: 100%; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 7px; color: var(--text); font-family: inherit; font-size: 12px;
+  padding: 7px 10px; outline: none; transition: border-color .15s;
+}
+input[type="text"]:focus, input[type="date"]:focus, textarea:focus, select:focus { border-color: var(--blue); }
+textarea { resize: vertical; line-height: 1.5; }
+
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+/* 출장 유형 탭 */
+.type-tabs {
+  display: grid; gap: 5px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-bottom: 10px;
+}
+.type-tab {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 7px;
+  color: var(--muted); cursor: pointer; font-family: inherit; font-size: 11px;
+  font-weight: 600; padding: 7px 4px; text-align: center;
+  transition: all .15s; line-height: 1.3;
+}
+.type-tab:hover { border-color: var(--blue); color: var(--blue); }
+.type-tab.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+/* 동적 섹션 */
+.dynamic-section { display: none; }
+.dynamic-section.visible { display: block; }
+
+/* 참가자 */
+.member-list { display: flex; flex-direction: column; gap: 5px; margin-bottom: 6px; }
+.member-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 5px; align-items: center; }
+.btn-del {
+  background: transparent; border: 1px solid var(--border); border-radius: 6px;
+  color: var(--muted); cursor: pointer; font-size: 12px; padding: 5px 7px;
+  transition: color .15s, border-color .15s; line-height: 1;
+}
+.btn-del:hover { color: var(--red); border-color: var(--red); }
+
+.btn-add {
+  background: transparent; border: 1px dashed var(--border); border-radius: 7px;
+  color: var(--muted); cursor: pointer; font-size: 11px; padding: 6px; width: 100%;
+  transition: color .15s, border-color .15s;
+}
+.btn-add:hover { color: var(--blue); border-color: var(--blue); }
+
+/* 박람회 - 전시 항목 */
+.exhibit-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
+.exhibit-row {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 7px;
+  padding: 8px 10px; position: relative; display: flex; flex-direction: column; gap: 5px;
+}
+.btn-del-card {
+  position: absolute; top: 6px; right: 8px;
+  background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 13px; line-height: 1;
+}
+.btn-del-card:hover { color: var(--red); }
+
+/* 회의 - 안건 */
+.agenda-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
+.agenda-row {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 7px;
+  padding: 8px 10px; position: relative; display: flex; flex-direction: column; gap: 5px;
+}
+.agenda-num {
+  font-size: 10px; font-weight: 700; color: var(--blue); margin-bottom: 2px;
+}
+
+/* 점검 항목 */
+.check-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
+.check-row {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 7px;
+  padding: 8px 10px; position: relative; display: flex; flex-direction: column; gap: 5px;
+}
+
+/* 사진 */
+.photo-zone {
+  border: 2px dashed var(--border); border-radius: 8px; padding: 12px;
+  text-align: center; cursor: pointer; transition: border-color .15s, background .15s;
+  margin-bottom: 8px; position: relative;
+}
+.photo-zone:hover { border-color: var(--blue); background: rgba(59,130,246,.05); }
+.photo-zone input[type="file"] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; padding: 0; border: none;
+}
+.photo-zone .pz-icon { font-size: 20px; margin-bottom: 3px; }
+.photo-zone .pz-label { font-size: 11px; color: var(--muted); }
+.photo-zone .pz-sub { font-size: 10px; color: var(--border); margin-top: 2px; }
+
+.photo-thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 6px; }
+.thumb-item {
+  position: relative; border-radius: 6px; overflow: hidden;
+  aspect-ratio: 4/3; background: var(--surface2); border: 1px solid var(--border);
+}
+.thumb-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumb-del {
+  position: absolute; top: 3px; right: 3px; background: rgba(0,0,0,.7); border: none;
+  border-radius: 50%; color: #fff; cursor: pointer; font-size: 10px; width: 18px; height: 18px;
+  display: flex; align-items: center; justify-content: center;
+}
+.thumb-del:hover { background: var(--red); }
+.thumb-caption {
+  position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,.6); padding: 3px 6px;
+}
+.thumb-caption input {
+  background: transparent; border: none; color: #fff; font-size: 10px; padding: 0; width: 100%;
+}
+.thumb-caption input::placeholder { color: rgba(255,255,255,.5); }
+.thumb-caption input:focus { outline: none; }
+
+/* ── 미리보기 패널 (왼쪽) ── */
+.preview-panel {
+  flex: 1 1 0;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  overflow-y: auto; overflow-x: hidden; padding: 8px 10px;
+  min-width: 200px;
+}
+.preview-panel::-webkit-scrollbar { width: 4px; }
+.preview-panel::-webkit-scrollbar-thumb { background: #c1c5cc; border-radius: 4px; }
+
+/* ── 보고서 본문 ── */
+#report-output {
+  background: #fff; border-radius: 8px; color: #111;
+  padding: 28px 32px; font-family: '맑은 고딕', 'Malgun Gothic', sans-serif;
+  line-height: 1.75; min-height: calc(100% - 16px);
+}
+
+.rpt-org { font-size: 10pt; color: #666; text-align: right; margin-bottom: 5px; }
+.rpt-title-box {
+  text-align: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #111;
+}
+.rpt-title-box .category { font-size: 14pt; font-weight: 800; color: #222; letter-spacing: 4px; margin-bottom: 6px; }
+.rpt-title-box .type-badge {
+  display: inline-block; background: #1a56db; color: #fff; font-size: 9pt;
+  font-weight: 700; border-radius: 99px; padding: 2px 10px; margin-bottom: 6px; letter-spacing: 0.5px;
+}
+.rpt-title-box h1 { font-size: 20pt; font-weight: 900; color: #111; }
+.rpt-title-box .subtitle { font-size: 10pt; color: #444; margin-top: 3px; }
+
+.rpt-meta-table { width: 100%; border-collapse: collapse; margin-bottom: 14px; font-size: 10pt; }
+.rpt-meta-table th, .rpt-meta-table td { border: 1px solid #ccc; padding: 5px 10px; text-align: left; }
+.rpt-meta-table th { background: #f0f4f8; font-weight: 700; color: #333; white-space: nowrap; width: 1%; }
+
+.rpt-section { margin-bottom: 14px; }
+.rpt-section-title {
+  font-size: 11pt; font-weight: 700; color: #111;
+  border-left: 3px solid #1a56db; padding-left: 9px; margin-bottom: 7px;
+}
+.rpt-section-body { font-size: 10pt; color: #222; line-height: 1.8; padding-left: 2px; }
+.rpt-section-body p { margin-bottom: 3px; }
+
+/* 박람회 표 */
+.rpt-exhibit-table { width: 100%; border-collapse: collapse; font-size: 9.5pt; margin-top: 5px; }
+.rpt-exhibit-table th { background: #1a56db; color: #fff; padding: 5px 8px; text-align: center; font-weight: 700; }
+.rpt-exhibit-table td { border: 1px solid #ddd; padding: 5px 8px; vertical-align: top; }
+.rpt-exhibit-table tr:nth-child(even) td { background: #f8f9fb; }
+
+/* 회의 안건 */
+.rpt-agenda-item {
+  border: 1px solid #ddd; border-radius: 6px; margin-bottom: 8px; overflow: hidden; font-size: 10pt;
+}
+.rpt-agenda-header {
+  background: #1a56db; color: #fff; padding: 5px 12px; font-weight: 700; font-size: 10pt;
+}
+.rpt-agenda-body { padding: 7px 12px; }
+.rpt-agenda-row { display: grid; grid-template-columns: 70px 1fr; gap: 5px; margin-bottom: 3px; }
+.rpt-agenda-label { font-weight: 700; color: #555; }
+
+/* 점검 표 */
+.rpt-check-table { width: 100%; border-collapse: collapse; font-size: 9.5pt; margin-top: 5px; }
+.rpt-check-table th { background: #059669; color: #fff; padding: 5px 8px; text-align: center; font-weight: 700; }
+.rpt-check-table td { border: 1px solid #ddd; padding: 5px 8px; vertical-align: top; }
+.rpt-check-table tr:nth-child(even) td { background: #f0fdf4; }
+
+/* 키워드 */
+.rpt-keyword-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+.rpt-keyword {
+  background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 99px;
+  color: #1d4ed8; font-size: 9.5pt; font-weight: 600; padding: 3px 10px;
+}
+
+/* 시사점 */
+.rpt-implications {
+  background: #f8fafc; border-left: 3px solid #22c55e;
+  border-radius: 0 5px 5px 0; padding: 9px 13px; font-size: 10pt; color: #1a3a1a; line-height: 1.8;
+}
+
+/* 사진 */
+.rpt-photo-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 6px; }
+.rpt-photo-item { display: flex; flex-direction: column; gap: 3px; width: calc(33.333% - 6px); }
+.rpt-photo-item img { width: 100%; border-radius: 4px; border: 1px solid #ddd; aspect-ratio: 4/3; object-fit: cover; }
+.rpt-photo-caption { font-size: 8.5pt; color: #555; text-align: center; }
+
+.rpt-sign {
+  margin-top: 20px; text-align: right; font-size: 10pt; color: #333;
+  border-top: 1px solid #ccc; padding-top: 8px;
+}
+
+.empty-state {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 280px; color: #bbb; font-size: 13px; gap: 10px;
+}
+.empty-state .icon { font-size: 40px; opacity: .35; }
+
+/* ── 인쇄 ── */
+@media print {
+  html, body { height: auto; overflow: visible; background: #fff; }
+  .wrapper { height: auto; }
+  .topbar, .form-panel { display: none !important; }
+  .layout { display: block; padding: 0; }
+  .preview-panel { border: none; padding: 0; background: #fff; overflow: visible; height: auto; }
+  #report-output { padding: 0; border-radius: 0; min-height: unset; }
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- ── 상단 바 ── -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="icon">📋</span>
+      <h1>출장보고서 작성 프로그램</h1>
+    </div>
+    <div class="topbar-right">
+      <button class="btn-gen" onclick="generate()">▶ 보고서 생성</button>
+      <button class="btn-tool" onclick="copyText()">텍스트 복사</button>
+<button class="btn-tool print" onclick="window.print()">인쇄 / PDF</button>
+    </div>
+  </div>
+
+  <!-- ── 본문 ── -->
+  <div class="layout">
+
+    <!-- ── 왼쪽 미리보기 ── -->
+    <div class="preview-panel">
+      <div id="report-output">
+        <div class="empty-state">
+          <div class="icon">📄</div>
+          <div>출장 유형 선택 후 내용 입력, 상단 <b>▶ 보고서 생성</b>을 눌러주세요</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 드래그 구분선 ── -->
+    <div class="resize-handle" id="resize-handle"></div>
+
+    <!-- ── 오른쪽 폼 ── -->
+    <div class="form-panel">
+
+      <!-- 출장 유형 -->
+      <div class="sec">출장 유형</div>
+      <div class="type-tabs" id="type-tabs">
+        <button class="type-tab active" data-type="expo" onclick="setType('expo', this)">박람회<br>엑스포</button>
+        <button class="type-tab" data-type="meeting" onclick="setType('meeting', this)">부서 회의<br>협의</button>
+        <button class="type-tab" data-type="inspect" onclick="setType('inspect', this)">현장 점검<br>조사</button>
+        <button class="type-tab" data-type="edu" onclick="setType('edu', this)">교육<br>연수</button>
+        <button class="type-tab" data-type="conference" onclick="setType('conference', this)">학술<br>세미나</button>
+        <button class="type-tab" data-type="etc" onclick="setType('etc', this)">기타</button>
+      </div>
+
+      <!-- 기본 정보 -->
+      <div class="sec">기본 정보</div>
+
+      <div class="fg">
+        <label id="lbl-title">행사명 <span class="req">*</span></label>
+        <input id="i-event" type="text" placeholder="예) 2026 스마트시티 엑스포 코리아">
+      </div>
+
+      <div class="row2">
+        <div class="fg"><label>시작일 <span class="req">*</span></label><input id="i-date-start" type="date"></div>
+        <div class="fg"><label>종료일 <span class="req">*</span></label><input id="i-date-end" type="date"></div>
+      </div>
+
+      <div class="fg">
+        <label id="lbl-place">개최 장소 <span class="req">*</span></label>
+        <input id="i-place" type="text" placeholder="예) 코엑스 A홀, 서울">
+      </div>
+
+      <div class="row2">
+        <div class="fg">
+          <label>출장 목적</label>
+          <select id="i-purpose-type">
+            <option>기술동향 조사</option>
+            <option>신기술 벤치마킹</option>
+            <option>협력사 발굴</option>
+            <option>부서 간 협의</option>
+            <option>현황 파악 및 점검</option>
+            <option>교육 / 연수</option>
+            <option>학술 세미나 참석</option>
+            <option>업무 협약 (MOU)</option>
+            <option>기타</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>작성 부서</label>
+          <input id="i-dept" type="text" placeholder="예) 스마트기술연구팀">
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>세부 목적</label>
+        <textarea id="i-purpose-detail" rows="2" placeholder="구체적 목적을 간략히 입력하세요"></textarea>
+      </div>
+
+      <hr class="sep">
+      <div class="sec">참가자</div>
+      <div class="member-list" id="member-list"></div>
+      <button class="btn-add" onclick="addMember()">＋ 참가자 추가</button>
+
+      <!-- ───── 박람회/엑스포 섹션 ───── -->
+      <div class="dynamic-section visible" id="sec-expo">
+        <hr class="sep">
+        <div class="sec">주요 전시 / 세미나 내용</div>
+        <div class="exhibit-list" id="exhibit-list"></div>
+        <button class="btn-add" onclick="addExhibit()">＋ 전시 항목 추가</button>
+
+        <hr class="sep">
+        <div class="sec">핵심 키워드 / 트렌드</div>
+        <div class="fg">
+          <label>키워드 <small style="color:var(--muted);font-weight:400">(쉼표로 구분)</small></label>
+          <input id="i-keywords" type="text" placeholder="예) AI 교통관제, 자율주행, 디지털트윈">
+        </div>
+      </div>
+
+      <!-- ───── 회의/협의 섹션 ───── -->
+      <div class="dynamic-section" id="sec-meeting">
+        <hr class="sep">
+        <div class="sec">회의 안건</div>
+        <div class="agenda-list" id="agenda-list"></div>
+        <button class="btn-add" onclick="addAgenda()">＋ 안건 추가</button>
+
+        <hr class="sep">
+        <div class="sec">주요 결정사항</div>
+        <div class="fg">
+          <textarea id="i-decisions" rows="3" placeholder="합의된 결정 사항을 입력하세요 (줄바꿈으로 구분)"></textarea>
+        </div>
+
+        <div class="sec">후속 조치 / 액션 아이템</div>
+        <div class="fg">
+          <textarea id="i-actions" rows="3" placeholder="예) ○○팀: 2026-06-01까지 자료 제출&#10;○○팀: 협약서 초안 작성"></textarea>
+        </div>
+      </div>
+
+      <!-- ───── 현장 점검 섹션 ───── -->
+      <div class="dynamic-section" id="sec-inspect">
+        <hr class="sep">
+        <div class="sec">점검 항목</div>
+        <div class="check-list" id="check-list"></div>
+        <button class="btn-add" onclick="addCheck()">＋ 점검 항목 추가</button>
+
+        <hr class="sep">
+        <div class="sec">종합 의견</div>
+        <div class="fg">
+          <textarea id="i-inspect-summary" rows="3" placeholder="전반적인 점검 결과 및 조치 필요 사항"></textarea>
+        </div>
+      </div>
+
+      <!-- ───── 교육/연수 섹션 ───── -->
+      <div class="dynamic-section" id="sec-edu">
+        <hr class="sep">
+        <div class="sec">교육 내용</div>
+        <div class="fg">
+          <label>교육기관 / 강사</label>
+          <input id="i-edu-org" type="text" placeholder="예) 한국도로공사 교육원, 김○○ 교수">
+        </div>
+        <div class="fg">
+          <label>교육 과정명</label>
+          <input id="i-edu-course" type="text" placeholder="예) 스마트도로 기술 전문교육 과정">
+        </div>
+        <div class="fg">
+          <label>주요 교육 내용</label>
+          <textarea id="i-edu-content" rows="4" placeholder="교육 과정별 주요 학습 내용을 입력하세요"></textarea>
+        </div>
+        <div class="fg">
+          <label>수료 사항</label>
+          <input id="i-edu-cert" type="text" placeholder="예) 수료증 취득, 이수 시간: 16시간">
+        </div>
+      </div>
+
+      <!-- ───── 학술/세미나 섹션 ───── -->
+      <div class="dynamic-section" id="sec-conference">
+        <hr class="sep">
+        <div class="sec">발표 / 세션 내용</div>
+        <div class="exhibit-list" id="session-list"></div>
+        <button class="btn-add" onclick="addSession()">＋ 세션 추가</button>
+
+        <hr class="sep">
+        <div class="sec">핵심 키워드</div>
+        <div class="fg">
+          <input id="i-conf-keywords" type="text" placeholder="예) ITS, V2X, 교통안전, AI">
+        </div>
+      </div>
+
+      <!-- ───── 기타 섹션 ───── -->
+      <div class="dynamic-section" id="sec-etc">
+        <hr class="sep">
+        <div class="sec">출장 주요 내용</div>
+        <div class="fg">
+          <textarea id="i-etc-content" rows="5" placeholder="출장 중 수행한 주요 업무 내용을 자유롭게 입력하세요"></textarea>
+        </div>
+      </div>
+
+      <!-- ───── 공통: 사진 ───── -->
+      <hr class="sep">
+      <div class="sec">사진</div>
+      <div class="photo-zone" id="photo-zone">
+        <input type="file" id="photo-input" accept="image/*" multiple onchange="handlePhotos(event)">
+        <div class="pz-icon">📷</div>
+        <div class="pz-label">클릭하여 사진 추가 (드래그 앤 드롭 가능)</div>
+        <div class="pz-sub">모바일: 카메라 촬영 직접 가능 · 여러 장 선택 가능</div>
+      </div>
+      <div class="photo-thumbs" id="photo-thumbs"></div>
+
+      <!-- ───── 공통: 시사점 ───── -->
+      <hr class="sep">
+      <div class="sec" id="lbl-impl">시사점 및 활용방안</div>
+      <div class="fg">
+        <textarea id="i-implications" rows="3"
+          placeholder="이번 출장의 시사점, 업무 적용 방안, 후속 조치 등"></textarea>
+      </div>
+
+      <div class="fg">
+        <label>비고 / 특이사항</label>
+        <textarea id="i-note" rows="2" placeholder="기타 특이사항을 입력하세요"></textarea>
+      </div>
+
+    </div><!-- /form-panel -->
+
+  </div>
+</div>
+
+<script>
+// ── 출장 유형 관리 ─────────────────────────────────
+let currentType = 'expo';
+
+const TYPE_META = {
+  expo:       { label: '박람회 / 엑스포', titleLbl: '행사명',    placeLbl: '개최 장소', implLbl: '시사점 및 활용방안' },
+  meeting:    { label: '부서 회의 / 협의', titleLbl: '회의명',    placeLbl: '회의 장소', implLbl: '종합 의견' },
+  inspect:    { label: '현장 점검',        titleLbl: '점검 대상', placeLbl: '점검 장소', implLbl: '조치 계획' },
+  edu:        { label: '교육 / 연수',      titleLbl: '교육 행사명',placeLbl: '교육 장소', implLbl: '교육 성과 및 활용방안' },
+  conference: { label: '학술 세미나',      titleLbl: '행사명',    placeLbl: '개최 장소', implLbl: '시사점 및 연구 활용방안' },
+  etc:        { label: '기타 출장',        titleLbl: '출장 건명', placeLbl: '출장 장소', implLbl: '결과 및 시사점' },
+};
+
+const SECTIONS = ['expo','meeting','inspect','edu','conference','etc'];
+
+function setType(type, el) {
+  currentType = type;
+  document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  SECTIONS.forEach(s => {
+    const sec = document.getElementById(`sec-${s}`);
+    if (sec) sec.classList.toggle('visible', s === type);
+  });
+  // 레이블 변경
+  const m = TYPE_META[type];
+  document.getElementById('lbl-title').innerHTML = `${m.titleLbl} <span class="req">*</span>`;
+  document.getElementById('lbl-place').innerHTML = `${m.placeLbl} <span class="req">*</span>`;
+  document.getElementById('lbl-impl').textContent = m.implLbl;
+  // 목적 옵션 기본값
+  const purposeMap = {
+    expo: '기술동향 조사', meeting: '부서 간 협의', inspect: '현황 파악 및 점검',
+    edu: '교육 / 연수', conference: '학술 세미나 참석', etc: '기타'
+  };
+  document.getElementById('i-purpose-type').value = purposeMap[type];
+}
+
+// ── 참가자 ───────────────────────────────────────
+let memberCount = 0;
+function addMember(name = '', rank = '') {
+  const id = ++memberCount;
+  const row = document.createElement('div');
+  row.className = 'member-row'; row.id = `member-${id}`;
+  row.innerHTML = `
+    <input type="text" placeholder="이름" value="${name}" class="m-name">
+    <input type="text" placeholder="직위/직급" value="${rank}" class="m-rank">
+    <button class="btn-del" onclick="document.getElementById('member-${id}').remove()">✕</button>`;
+  document.getElementById('member-list').appendChild(row);
+}
+
+// ── 전시 항목 (박람회) ────────────────────────────
+let exhibitCount = 0;
+function addExhibit(company = '', title = '', content = '') {
+  const id = ++exhibitCount;
+  const row = document.createElement('div');
+  row.className = 'exhibit-row'; row.id = `exhibit-${id}`;
+  row.innerHTML = `
+    <button class="btn-del-card" onclick="document.getElementById('exhibit-${id}').remove()">✕</button>
+    <input type="text" placeholder="기업명 / 기관명" value="${company}" class="ex-company">
+    <input type="text" placeholder="전시·세미나 제목" value="${title}" class="ex-title">
+    <textarea rows="2" class="ex-content" placeholder="주요 내용 (간략히)">${content}</textarea>`;
+  document.getElementById('exhibit-list').appendChild(row);
+}
+
+// ── 세션 (세미나) ─────────────────────────────────
+let sessionCount = 0;
+function addSession(presenter = '', title = '', content = '') {
+  const id = ++sessionCount;
+  const row = document.createElement('div');
+  row.className = 'exhibit-row'; row.id = `session-${id}`;
+  row.innerHTML = `
+    <button class="btn-del-card" onclick="document.getElementById('session-${id}').remove()">✕</button>
+    <input type="text" placeholder="발표자 / 기관" value="${presenter}" class="ss-presenter">
+    <input type="text" placeholder="발표 제목" value="${title}" class="ss-title">
+    <textarea rows="2" class="ss-content" placeholder="주요 내용">${content}</textarea>`;
+  document.getElementById('session-list').appendChild(row);
+}
+
+// ── 회의 안건 ─────────────────────────────────────
+let agendaCount = 0;
+function addAgenda(title = '', detail = '', result = '') {
+  const id = ++agendaCount;
+  const row = document.createElement('div');
+  row.className = 'agenda-row'; row.id = `agenda-${id}`;
+  row.innerHTML = `
+    <button class="btn-del-card" onclick="document.getElementById('agenda-${id}').remove()">✕</button>
+    <div class="agenda-num">안건 ${id}</div>
+    <input type="text" placeholder="안건 제목" value="${title}" class="ag-title">
+    <textarea rows="2" class="ag-detail" placeholder="세부 내용">${detail}</textarea>
+    <textarea rows="2" class="ag-result" placeholder="논의 결과 / 의결 사항">${result}</textarea>`;
+  document.getElementById('agenda-list').appendChild(row);
+}
+
+// ── 점검 항목 ─────────────────────────────────────
+let checkCount = 0;
+function addCheck(item = '', status = '', action = '') {
+  const id = ++checkCount;
+  const row = document.createElement('div');
+  row.className = 'check-row'; row.id = `check-${id}`;
+  row.innerHTML = `
+    <button class="btn-del-card" onclick="document.getElementById('check-${id}').remove()">✕</button>
+    <input type="text" placeholder="점검 항목" value="${item}" class="ck-item">
+    <div class="row2" style="margin-top:5px">
+      <input type="text" placeholder="현황 / 상태" value="${status}" class="ck-status">
+      <input type="text" placeholder="조치 사항" value="${action}" class="ck-action">
+    </div>`;
+  document.getElementById('check-list').appendChild(row);
+}
+
+// ── 사진 ─────────────────────────────────────────
+const photos = [];
+function handlePhotos(e) {
+  Array.from(e.target.files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = ev => { const idx = photos.length; photos.push({ dataUrl: ev.target.result, caption: '' }); renderThumb(idx); };
+    reader.readAsDataURL(file);
+  });
+  e.target.value = '';
+}
+function renderThumb(idx) {
+  const item = document.createElement('div');
+  item.className = 'thumb-item'; item.id = `thumb-${idx}`;
+  item.innerHTML = `
+    <img src="${photos[idx].dataUrl}" alt="현장사진">
+    <button class="thumb-del" onclick="removePhoto(${idx})">✕</button>
+    <div class="thumb-caption">
+      <input type="text" placeholder="사진 설명" value=""
+             oninput="photos[${idx}].caption = this.value">
+    </div>`;
+  document.getElementById('photo-thumbs').appendChild(item);
+}
+function removePhoto(idx) { photos[idx] = null; document.getElementById(`thumb-${idx}`)?.remove(); }
+
+// 드래그앤드롭
+const zone = document.getElementById('photo-zone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.borderColor = 'var(--blue)'; });
+zone.addEventListener('dragleave', () => { zone.style.borderColor = ''; });
+zone.addEventListener('drop', e => {
+  e.preventDefault(); zone.style.borderColor = '';
+  Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = ev => { const idx = photos.length; photos.push({ dataUrl: ev.target.result, caption: '' }); renderThumb(idx); };
+    reader.readAsDataURL(file);
+  });
+});
+
+// ── 보고서 생성 ──────────────────────────────────
+function generate() {
+  const eventName     = v('i-event');
+  const dateStart     = v('i-date-start');
+  const dateEnd       = v('i-date-end');
+  const place         = v('i-place');
+  const purposeType   = v('i-purpose-type');
+  const purposeDetail = v('i-purpose-detail');
+  const dept          = v('i-dept') || '스마트기술연구팀';
+  const implications  = v('i-implications');
+  const note          = v('i-note');
+  const typeMeta      = TYPE_META[currentType];
+
+  if (!eventName || !dateStart || !dateEnd || !place) {
+    alert(`${typeMeta.titleLbl}, 출장 기간, ${typeMeta.placeLbl}는 필수입니다.`);
+    return;
+  }
+
+  const members = [...document.querySelectorAll('.member-row')]
+    .map(r => ({ name: r.querySelector('.m-name').value.trim(), rank: r.querySelector('.m-rank').value.trim() }))
+    .filter(m => m.name);
+
+  const validPhotos = photos.filter(Boolean);
+
+  const fmtDate = s => { if (!s) return ''; const [y,m,d] = s.split('-'); return `${y}년 ${+m}월 ${+d}일`; };
+  const period  = dateStart === dateEnd
+    ? fmtDate(dateStart) + ' (1일간)'
+    : `${fmtDate(dateStart)} ~ ${fmtDate(dateEnd)} (${dayDiff(dateStart, dateEnd)}일간)`;
+  const today   = new Date();
+  const todayStr = `${today.getFullYear()}년 ${today.getMonth()+1}월 ${today.getDate()}일`;
+
+  let sn = 1;
+
+  let html = `
+<div class="rpt-org">한국도로공사 ${esc(dept)}</div>
+<div class="rpt-title-box">
+  <div class="category">출 장 보 고 서</div>
+  <div class="type-badge">${esc(typeMeta.label)}</div>
+  <h1>${esc(eventName)}</h1>
+</div>
+<table class="rpt-meta-table">
+  <tr><th>${esc(typeMeta.titleLbl)}</th><td colspan="3">${esc(eventName)}</td></tr>
+  <tr><th>출장 기간</th><td colspan="3">${period}</td></tr>
+  <tr><th>${esc(typeMeta.placeLbl)}</th><td colspan="3">${esc(place)}</td></tr>
+  <tr><th>출장 목적</th><td colspan="3">${esc(purposeType)}${purposeDetail ? ' — ' + esc(purposeDetail) : ''}</td></tr>
+  <tr><th>참 가 자</th><td colspan="3">${members.length ? members.map(m => esc(m.name) + (m.rank ? ` (${esc(m.rank)})` : '')).join(', ') : '—'}</td></tr>
+  <tr><th>작 성 일</th><td>${todayStr}</td><th>작성 부서</th><td>${esc(dept)}</td></tr>
+</table>`;
+
+  // 개요 섹션
+  html += `
+<div class="rpt-section">
+  <div class="rpt-section-title">${sn++}. 출장 개요</div>
+  <div class="rpt-section-body">
+    <p>○ ${esc(typeMeta.titleLbl)}: ${esc(eventName)}</p>
+    <p>○ 일  시: ${period}</p>
+    <p>○ 장  소: ${esc(place)}</p>
+    ${purposeDetail ? `<p>○ 목  적: ${esc(purposeDetail)}</p>` : ''}
+  </div>
+</div>`;
+
+  // ─ 유형별 본문 ─
+  if (currentType === 'expo') {
+    const exhibits = [...document.querySelectorAll('#exhibit-list .exhibit-row')]
+      .map(r => ({ company: r.querySelector('.ex-company').value.trim(), title: r.querySelector('.ex-title').value.trim(), content: r.querySelector('.ex-content').value.trim() }))
+      .filter(e => e.title || e.company);
+    const kwArr = v('i-keywords').split(',').map(s => s.trim()).filter(Boolean);
+
+    if (exhibits.length) {
+      html += `
+<div class="rpt-section">
+  <div class="rpt-section-title">${sn++}. 주요 참관 내용</div>
+  <table class="rpt-exhibit-table">
+    <thead><tr><th>No</th><th>기업/기관</th><th>전시·세미나 제목</th><th>주요 내용</th></tr></thead>
+    <tbody>${exhibits.map((e,i) => `<tr><td style="text-align:center;width:28px">${i+1}</td><td style="width:120px">${esc(e.company)||'—'}</td><td>${esc(e.title)}</td><td>${esc(e.content)||'—'}</td></tr>`).join('')}</tbody>
+  </table>
+</div>`;
+    }
+    if (kwArr.length) {
+      html += `
+<div class="rpt-section">
+  <div class="rpt-section-title">${sn++}. 핵심 기술 트렌드</div>
+  <div class="rpt-keyword-list">${kwArr.map(k => `<span class="rpt-keyword">${esc(k)}</span>`).join('')}</div>
+</div>`;
+    }
+  }
+
+  else if (currentType === 'meeting') {
+    const agendas = [...document.querySelectorAll('#agenda-list .agenda-row')]
+      .map((r,i) => ({ num: i+1, title: r.querySelector('.ag-title').value.trim(), detail: r.querySelector('.ag-detail').value.trim(), result: r.querySelector('.ag-result').value.trim() }))
+      .filter(a => a.title);
+    const decisions = v('i-decisions');
+    const actions   = v('i-actions');
+
+    if (agendas.length) {
+      html += `
+<div class="rpt-section">
+  <div class="rpt-section-title">${sn++}. 회의 안건 및 논의 결과</div>
+  ${agendas.map(a => `
+  <div class="rpt-agenda-item">
+    <div class="rpt-agenda-header">안건 ${a.num}. ${esc(a.title)}</div>
+    <div class="rpt-agenda-body">
+      ${a.detail ? `<div class="rpt-agenda-row"><span class="rpt-agenda-label">세부 내용</span><span>${esc(a.detail).replace(/\n/g,'<br>')}</span></div>` : ''}
+      ${a.result ? `<div class="rpt-agenda-row"><span class="rpt-agenda-label">의결 사항</span><span>${esc(a.result).replace(/\n/g,'<br>')}</span></div>` : ''}
+    </div>
+  </div>`).join('')}
+</div>`;
+    }
+    if (decisions) {
+      html += `
+<div class="rpt-section">
+  <div class="rpt-section-title">${sn++}. 주요 결정사항</div>
+  <div class="rpt-section-body">${decisions.split('\n').filter(Boolean).map(l => `<p>○ ${esc(l)}</p>`).join('')}</div>
+</div>`;
+    }
+    if (actions) {
+      html += `
+<div class="rpt-section">
+  <div class="rpt-section-title">${sn++}. 후속 조치 / 액션 아이템</div>
+  <div class="rpt-section-body">${actions.split('\n').filter(Boolean).map(l => `<p>▷ ${esc(l)}</p>`).join('')}</div>
+</div>`;
+    }
+  }
+
+  else if (currentType === 'inspect') {
+    const checks = [...document.querySelectorAll('#check-list .check-row')]
+      .map((r,i) => ({ num: i+1, item: r.querySelector('.ck-item').value.trim(), status: r.querySelector('.ck-status').value.trim(), action: r.querySelector('.ck-action').value.trim() }))
+      .filter(c => c.item);
+    const summary = v('i-inspect-summary');
+
+    if (checks.length) {
+      html += `
+<div class="rpt-section">
+  <div class="rpt-section-title">${sn++}. 점검 결과</div>
+  <table class="rpt-check-table">
+    <thead><tr><th>No</th><th>점검 항목</th><th>현황 / 상태</th><th>조치 사항</th></tr></thead>
+    <tbody>${checks.map(c => `<tr><td style="text-align:center;width:28px">${c.num}</td><td>${esc(c.item)}</td><td>${esc(c.status)||'—'}</td><td>${esc(c.action)||'—'}</td></tr>`).join('')}</tbody>
+  </table>
+</div>`;
+    }
+    if (summary) {
+      html += `
+<div class="rpt-section">
+  <div class="rpt-section-title">${sn++}. 종합 의견</div>
+  <div class="rpt-section-body">${summary.split('\n').filter(Boolean).map(l => `<p>○ ${esc(l)}</p>`).join('')}</div>
+</div>`;
+    }
+  }
+
+  else if (currentType === 'edu') {
+    const eduOrg    = v('i-edu-org');
+    const eduCourse = v('i-edu-course');
+    const eduContent = v('i-edu-content');
+    const eduCert   = v('i-edu-cert');
+    html += `
+<div class="rpt-section">
+  <div class="rpt-section-title">${sn++}. 교육 내용</div>
+  <div class="rpt-section-body">
+    ${eduOrg    ? `<p>○ 교육기관/강사: ${esc(eduOrg)}</p>` : ''}
+    ${eduCourse ? `<p>○ 과  정  명: ${esc(eduCourse)}</p>` : ''}
+    ${eduCert   ? `<p>○ 수  료  사항: ${esc(eduCert)}</p>` : ''}
+  </div>
+  ${eduContent ? `<div style="margin-top:10px" class="rpt-implications">${esc(eduContent).replace(/\n/g,'<br>')}</div>` : ''}
+</div>`;
+  }
+
+  else if (currentType === 'conference') {
+    const sessions = [...document.querySelectorAll('#session-list .exhibit-row')]
+      .map((r,i) => ({ num: i+1, presenter: r.querySelector('.ss-presenter').value.trim(), title: r.querySelector('.ss-title').value.trim(), content: r.querySelector('.ss-content').value.trim() }))
+      .filter(s => s.title);
+    const kwArr = v('i-conf-keywords').split(',').map(s => s.trim()).filter(Boolean);
+
+    if (sessions.length) {
+      html += `
+<div class="rpt-section">
+  <div class="rpt-section-title">${sn++}. 주요 발표 내용</div>
+  <table class="rpt-exhibit-table">
+    <thead><tr><th>No</th><th>발표자/기관</th><th>발표 제목</th><th>주요 내용</th></tr></thead>
+    <tbody>${sessions.map(s => `<tr><td style="text-align:center;width:28px">${s.num}</td><td style="width:120px">${esc(s.presenter)||'—'}</td><td>${esc(s.title)}</td><td>${esc(s.content)||'—'}</td></tr>`).join('')}</tbody>
+  </table>
+</div>`;
+    }
+    if (kwArr.length) {
+      html += `
+<div class="rpt-section">
+  <div class="rpt-section-title">${sn++}. 핵심 키워드</div>
+  <div class="rpt-keyword-list">${kwArr.map(k => `<span class="rpt-keyword">${esc(k)}</span>`).join('')}</div>
+</div>`;
+    }
+  }
+
+  else if (currentType === 'etc') {
+    const content = v('i-etc-content');
+    if (content) {
+      html += `
+<div class="rpt-section">
+  <div class="rpt-section-title">${sn++}. 출장 주요 내용</div>
+  <div class="rpt-section-body">${content.split('\n').filter(Boolean).map(l => `<p>○ ${esc(l)}</p>`).join('')}</div>
+</div>`;
+    }
+  }
+
+  // ─ 공통: 사진 ─
+  if (validPhotos.length) {
+    html += `
+<div class="rpt-section">
+  <div class="rpt-section-title">${sn++}. 사진</div>
+  <div class="rpt-photo-grid">${validPhotos.map(p => `
+    <div class="rpt-photo-item">
+      <img src="${p.dataUrl}" alt="현장사진">
+      ${p.caption ? `<div class="rpt-photo-caption">${esc(p.caption)}</div>` : ''}
+    </div>`).join('')}
+  </div>
+</div>`;
+  }
+
+  // ─ 공통: 시사점 ─
+  html += `
+<div class="rpt-section">
+  <div class="rpt-section-title">${sn++}. ${esc(typeMeta.implLbl)}</div>
+  <div class="rpt-implications">${(implications || '추후 별도 보고 예정').replace(/\n/g, '<br>')}</div>
+</div>`;
+
+  if (note) {
+    html += `
+<div class="rpt-section">
+  <div class="rpt-section-title">${sn++}. 비고 / 특이사항</div>
+  <div class="rpt-section-body"><p>${esc(note).replace(/\n/g,'<br>')}</p></div>
+</div>`;
+  }
+
+  html += `
+<div class="rpt-sign">
+  <p>${todayStr}</p>
+  <p style="margin-top:4px">${esc(dept)} 일동</p>
+</div>`;
+
+  document.getElementById('report-output').innerHTML = html;
+}
+
+// ── 유틸 ─────────────────────────────────────────
+function v(id) { return document.getElementById(id)?.value.trim() || ''; }
+function dayDiff(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000) + 1; }
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function copyText() {
+  navigator.clipboard.writeText(document.getElementById('report-output').innerText)
+    .then(() => alert('텍스트가 클립보드에 복사되었습니다.'));
+}
+
+// ── 드래그 리사이즈 ───────────────────────────────
+(function initResize() {
+  const handle   = document.getElementById('resize-handle');
+  const formPanel = document.querySelector('.form-panel');
+  let dragging = false, startX = 0, startW = 0;
+
+  handle.addEventListener('mousedown', e => {
+    dragging = true;
+    startX = e.clientX;
+    startW = formPanel.offsetWidth;
+    handle.classList.add('dragging');
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const delta = startX - e.clientX; // 왼쪽으로 당기면 폼 넓어짐
+    const newW = Math.max(260, Math.min(700, startW + delta));
+    formPanel.style.flex = `0 0 ${newW}px`;
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    handle.classList.remove('dragging');
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+  });
+})();
+
+// ── 초기화 ───────────────────────────────────────
+(function init() {
+  const today = new Date().toISOString().slice(0, 10);
+  document.getElementById('i-date-start').value = today;
+  document.getElementById('i-date-end').value = today;
+  addMember();
+  addExhibit();
+  addAgenda();
+  addCheck();
+  addSession();
+})();
+</script>
+</body>
+</html>
